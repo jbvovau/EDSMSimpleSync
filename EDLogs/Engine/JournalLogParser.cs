@@ -78,6 +78,11 @@ namespace EDLogs.Engine
         /// <param name="data"></param>
         private void AddEvent(string data)
         {
+            if (this.Manager != null)
+            {
+                this.Manager.DispatchJournalLog(data);
+            }
+
             try
             {
                 JournalEvent e = JsonConvert.DeserializeObject<JournalEvent>(data);
@@ -85,7 +90,7 @@ namespace EDLogs.Engine
             }
             catch (Exception ex)
             {
-                Program.Log("[Exception] " + ex.Message);
+                // Program.Log("[Exception] " + ex.Message);
             }
         }
 

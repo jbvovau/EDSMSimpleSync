@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDLogs", "EDLogs\EDLogs.csproj", "{DBCDBFC3-55FC-4C0E-9B7C-1DFE0C849EB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EDLogs", "EDLogs\EDLogs.csproj", "{DBCDBFC3-55FC-4C0E-9B7C-1DFE0C849EB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Start", "Start\Start.csproj", "{577A8C95-A893-4499-BAED-066ED04AB47A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSMSync", "EDSMSync\EDSMSync.csproj", "{4CD45D5B-8C0D-489C-90C4-0C5892D7A934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{DBCDBFC3-55FC-4C0E-9B7C-1DFE0C849EB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBCDBFC3-55FC-4C0E-9B7C-1DFE0C849EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBCDBFC3-55FC-4C0E-9B7C-1DFE0C849EB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{577A8C95-A893-4499-BAED-066ED04AB47A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{577A8C95-A893-4499-BAED-066ED04AB47A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{577A8C95-A893-4499-BAED-066ED04AB47A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{577A8C95-A893-4499-BAED-066ED04AB47A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CD45D5B-8C0D-489C-90C4-0C5892D7A934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CD45D5B-8C0D-489C-90C4-0C5892D7A934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CD45D5B-8C0D-489C-90C4-0C5892D7A934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CD45D5B-8C0D-489C-90C4-0C5892D7A934}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

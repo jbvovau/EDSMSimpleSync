@@ -12,10 +12,14 @@ namespace EDLogs.Engine
 
         public delegate void JournalLogHandler(JournalEvent e);
 
+        public delegate void JournalLogEntryHandler(string line);
+
         /// <summary>
         ///  when a new entry comes in live
         /// </summary>
         public event JournalLogHandler NewJournalLog;
+
+        public event JournalLogEntryHandler NewJournalLogEntry;
 
         /// <summary>
         /// Every journal log parsed, even old ones
@@ -62,6 +66,26 @@ namespace EDLogs.Engine
             this.StartQueue();
         }
 
+        /// <summary>
+        /// Parse all entries
+        /// </summary>
+        public void ReadAll()
+        {
+            var info = new DirectoryInfo(this.Directory);
+            var files = info.GetFiles();
+
+            foreach (var file in files)
+            {
+                this.AddToQueue(file.FullName);
+            }
+
+            if (!this._run)
+            {
+                this.RunQueue();
+
+            }
+        }
+
         public void StopListen()
         {
             this.StopQueue();
@@ -74,8 +98,8 @@ namespace EDLogs.Engine
         /// <param name="e"></param>
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            //Copies file to another directory.
-            Program.Log("[File][" + e.ChangeType +"] " + e.FullPath);
+            // Copies file to another directory.
+            //Program.Log("[File][" + e.ChangeType +"] " + e.FullPath);
             this.AddToQueue(e.FullPath);
 
         }
@@ -92,7 +116,7 @@ namespace EDLogs.Engine
             {
                 if (!this._queued.Contains(path))
                 {
-                    Program.Log("[File][Add to Queue] " + path);
+                    // Program.Log("[File][Add to Queue] " + path);
                     this._queued.Add(path);
                 }
             }
@@ -119,7 +143,7 @@ namespace EDLogs.Engine
 
                 if (path != null)
                 {
-                    Program.Log("[Log][PARSING] " + path);
+                    // Program.Log("[Log][PARSING] " + path);
 
                     // remove file from queue before beeing parsed (to be replayed in case)
                     lock (this._queued)
@@ -135,7 +159,7 @@ namespace EDLogs.Engine
                         }
                     }
 
-                    Program.Log("[Log][DONE] " + path);
+                    // Program.Log("[Log][DONE] " + path);
                 }
 
                 Thread.Sleep(1000);
@@ -159,6 +183,14 @@ namespace EDLogs.Engine
         private void StopQueue()
         {
             this._run = false;
+        }
+
+        public void DispatchJournalLog(string data)
+        {
+            if (this.NewJournalLogEntry != null)
+            {
+                this.NewJournalLogEntry(data);
+            }
         }
 
         public void Dispatch(JournalEvent evt)
