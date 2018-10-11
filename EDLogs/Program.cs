@@ -15,6 +15,9 @@ namespace EDLogs
             // define new log engine
             var engine = new LogManager();
 
+            // test a fake listener
+            engine.NewJournalLog += Engine_NewJournalLog;
+
             engine.ListenDirectory(@"C:\samplelogs\");
 
             while (true)
@@ -23,6 +26,11 @@ namespace EDLogs
             }
 
           
+        }
+
+        private static void Engine_NewJournalLog(Models.JournalEvent e)
+        {
+            Log(string.Format("[JournalEvent][{0}] {1}", e.Timestamp, e.EventName));
         }
 
         public static void Log(string message)
