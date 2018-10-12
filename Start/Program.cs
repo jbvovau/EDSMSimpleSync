@@ -2,9 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Xml;
 using EDLogs.Engine;
 using EDLogs.Models;
 using EDSMSync;
+using log4net;
+using log4net.Config;
 using Newtonsoft.Json;
 
 namespace Start
@@ -12,20 +16,34 @@ namespace Start
     class Program
     {
 
+        private static ILog log = log4net.LogManager.GetLogger(typeof(Program));
 
         static void Main(string[] args)
         {
+            configLog();
+
+            log.Info("START");
+
+
             // get edsm sample config
             var config_edsm = GetEDSMConfig();
 
 
             #region testing and dev : EDSMSync
 
+            // build a new sync engine
             var sync = new EDSMEngine();
+
+            sync.LoadLastDate();
+
+            // set api info
             sync.ApiName = config_edsm.name;
             sync.ApiKey = config_edsm.api_key;
 
-            sync.Listen(@"C:\samplelogs\");
+            // fetch last date
+
+            // sync.Listen(@"C:\samplelogs\");
+            sync.Listen(@"C:\Users\VOVAU\Saved Games\Frontier Developments\Elite Dangerous");
 
 
             while (true)
@@ -42,7 +60,7 @@ namespace Start
             Console.WriteLine("Start EDLOGS !!");
 
             // define new log engine
-            var engine = new LogManager();
+            var engine = new LogWatcher();
 
             // test a fake listener here
             engine.NewJournalLog += Engine_NewJournalLog;
@@ -65,13 +83,7 @@ namespace Start
 
         private static void Engine_NewJournalLog(JournalEvent e)
         {
-            Log(string.Format("[JournalEvent][{0}] {1}", e.Timestamp, e.EventName));
-        }
-
-        public static void Log(string message)
-        {
-            var line = string.Format("[{0}] {1}", DateTime.Now, message);
-            Console.WriteLine((line));
+            log.Info(string.Format("[JournalEvent][{0}] {1}", e.Timestamp, e.EventName));
         }
 
         private static EdsmConfig GetEDSMConfig()
@@ -93,6 +105,14 @@ namespace Start
             return config;
         }
 
+        private static void configLog()
+        {
+            XmlDocument log4netConfig = new XmlDocument();
+            log4netConfig.Load(File.OpenRead("log4net.config"));
+            var repo = log4net.LogManager.CreateRepository(Assembly.GetEntryAssembly(),
+                       typeof(log4net.Repository.Hierarchy.Hierarchy));
+            log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
+        }
 
         private class EdsmConfig
         {

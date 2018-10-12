@@ -57,12 +57,12 @@ namespace EDLogs.Models
 
         #region progress
 
-        public int Combat { get; set; }
-        public int Trade { get; set; }
-        public int Explore { get; set; }
-        public int Empire { get; set; }
-        public int Federation { get; set; }
-        public int CQC { get; set; }
+        // public int Combat { get; set; }
+        public decimal Trade { get; set; }
+        public decimal Explore { get; set; }
+        public decimal Empire { get; set; }
+        public decimal Federation { get; set; }
+        public decimal CQC { get; set; }
 
         #endregion
 
@@ -101,6 +101,10 @@ namespace EDLogs.Models
         public decimal Latittude { get; set; }
         public decimal Longitude { get; set; }
 
+        #region reputation
+
+        #endregion
+
         #region Location 
         public bool Docked { get; set; }
 
@@ -132,7 +136,7 @@ namespace EDLogs.Models
 
         public bool Submitted { get; set; }
         public bool Success { get; set; }
-        public bool Interdicted { get; set; }
+        public string Interdicted { get; set; }
         public string CombatRank { get; set; }
 
         #endregion
@@ -141,5 +145,23 @@ namespace EDLogs.Models
 
         #endregion
 
+        #region statistics
+
+        [JsonProperty(PropertyName = "Bank_Account")]
+        public object BankAccount { get; set; }
+
+
+        [JsonProperty(PropertyName = "Combat")]
+        public object CombatStats { get; set; }
+
+        public object Crime { get; set; }
+        public object Smuggling { get; set; }
+        public object Trading { get; set; }
+        public object Mining { get; set; }
+        public object Exploration { get; set; }
+        public object Passengers { get; set; }
+        public object Search_And_Rescue { get; set; }
+
+        #endregion
     }
 }

@@ -14,5 +14,10 @@ namespace EDSMSync
         public string msg;
 
         public EDSMResponse [] events;
+
+        public override string ToString()
+        {
+            return string.Format("{0} - {1} - {2}", msgnum, msg, events);
+        }
     }
 }

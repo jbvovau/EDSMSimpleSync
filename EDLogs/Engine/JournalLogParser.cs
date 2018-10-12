@@ -10,58 +10,64 @@ namespace EDLogs.Engine
 {
     public class JournalLogParser : IEDFileParser
     {
-        public JournalLogParser(LogManager manager)
+        public JournalLogParser(LogWatcher manager)
         {
             this.Manager = manager;
         }
 
-        public LogManager Manager { get; private set; }
+        public LogWatcher Manager { get; private set; }
 
         public bool Accept(string path)
         {
             return path != null && path.EndsWith(".log");
         }
 
-        public void Parse(string path)
+        public bool Parse(string path)
         {
             if (this.Accept(path))
             {
-                this.Read(path);
+                return this.Read(path);
             }
+            return false;
         }
 
         #region read and extract events 
 
-        public void Read(string path)
+        public bool Read(string path)
         {
-            var fileStream = new System.IO.FileStream(path, FileMode.Open);
-            using (fileStream)
+            try
             {
-                using (var reader = new StreamReader(fileStream))
-                {
+                var o = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 4096, FileOptions.RandomAccess);
 
-                    StringBuilder sb = new StringBuilder();
-
-                    string line = null;
-                    do
+                    using (var reader = new StreamReader(o))
                     {
-                        line = reader.ReadLine();
 
-                        sb.Append(line);
+                        StringBuilder sb = new StringBuilder();
 
-                        // check current builder
-                        if (sb.ToString().Trim().EndsWith("}"))
+                        string line = null;
+                        do
                         {
-                            this.AddEvent(sb.ToString());
-                            sb.Length = 0;
-                        }
-                    } while (line != null);
+                            line = reader.ReadLine();
 
-                    reader.Close();
-                    fileStream.Close();
+                            sb.Append(line);
 
-                }
+                            // check current builder
+                            if (sb.ToString().Trim().EndsWith("}"))
+                            {
+                                this.AddEvent(sb.ToString());
+                                sb.Length = 0;
+                            }
+                        } while (line != null);
+
+                        reader.Close();
+                    }
+                    return true;
+
+            }catch(Exception ex)
+            {
+                log4net.LogManager.GetLogger(typeof(JournalLogParser)).Error("Error when reading file :" + path, ex);
             }
+            return false;
         }
 
         public void AddEvent(JournalEvent evt)

@@ -4,11 +4,13 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using EDLogs.Models;
+using log4net;
 
 namespace EDLogs.Engine
 {
-    public class LogManager
+    public class LogWatcher
     {
+        private static ILog log = LogManager.GetLogger(typeof(LogWatcher));
 
         public delegate void JournalLogHandler(JournalEvent e);
 
@@ -26,6 +28,9 @@ namespace EDLogs.Engine
         /// </summary>
         public event JournalLogHandler AllJournalLog;
 
+        // file watcher
+        private FileSystemWatcher _watcher;
+
         // files parsers
         private IList<IEDFileParser> _parsers;
 
@@ -40,7 +45,7 @@ namespace EDLogs.Engine
         public string Directory { get; set; }
 
        
-        public LogManager()
+        public LogWatcher()
         {
             this._queued = new List<string>();
             this._parsers = new List<IEDFileParser>();
@@ -54,14 +59,16 @@ namespace EDLogs.Engine
         /// <param name="path"></param>
         public void ListenDirectory(string path)
         {
+            log.Debug("Listen to directory : " + path);
+
             this.Directory = path;
 
-            FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = path;
-            watcher.NotifyFilter = NotifyFilters.LastWrite;
-            watcher.Filter = "*.log";
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
-            watcher.EnableRaisingEvents = true;
+            this._watcher = new FileSystemWatcher();
+            _watcher.Path = path;
+            _watcher.NotifyFilter = NotifyFilters.LastWrite;
+            _watcher.Filter = "*.*";
+            _watcher.Changed += new FileSystemEventHandler(OnChanged);
+            _watcher.EnableRaisingEvents = true;
 
             this.StartQueue();
         }
@@ -82,7 +89,6 @@ namespace EDLogs.Engine
             if (!this._run)
             {
                 this.RunQueue();
-
             }
         }
 
@@ -112,6 +118,8 @@ namespace EDLogs.Engine
         /// <param name="path"></param>
         private void AddToQueue(string path)
         {
+            log.Info("Add File to Queue : " + path);
+
             lock (this._queued)
             {
                 if (!this._queued.Contains(path))
@@ -129,40 +137,39 @@ namespace EDLogs.Engine
         {
             while (this._run)
             {
-
-                string path = null;
-
+                bool longwait = false;
                 // take current file
                 lock (this._queued)
                 {
-                    if (this._queued.Count > 0)
-                    {
-                        path = this._queued[0];
-                    }
-                }
+                    var toremove = new List<string>();
 
-                if (path != null)
-                {
-                    // Program.Log("[Log][PARSING] " + path);
-
-                    // remove file from queue before beeing parsed (to be replayed in case)
-                    lock (this._queued)
-                    {
-                        this._queued.Remove(path);
-                    }
-
-                    foreach (var parser in _parsers)
-                    {
-                        if (parser.Accept(path))
+                        // Program.Log("[Log][PARSING] " + path);
+                        foreach (var path in this._queued)
                         {
-                            parser.Parse(path);
+                            foreach (var parser in _parsers)
+                            {
+                                if (parser.Accept(path))
+                                {
+                                    var success = parser.Parse(path);
+
+                                    if (success)
+                                    {
+                                        // remove file from queue before beeing parsed (to be replayed in case)
+                                            toremove.Add(path);
+                                    }
+                                }
+                            }
                         }
+
+                      foreach(var r in toremove)
+                    {
+                        _queued.Remove(r);
                     }
 
-                    // Program.Log("[Log][DONE] " + path);
                 }
 
-                Thread.Sleep(1000);
+                // log.Debug(_watcher.EnableRaisingEvents);
+                Thread.Sleep(5000);
             }
         }
 
@@ -195,6 +202,7 @@ namespace EDLogs.Engine
 
         public void Dispatch(JournalEvent evt)
         {
+            log.Info(string.Format("[event][{0}] {1}", evt.Timestamp, evt.EventName));
             if (this.NewJournalLog != null)
             {
                 this.NewJournalLog(evt);

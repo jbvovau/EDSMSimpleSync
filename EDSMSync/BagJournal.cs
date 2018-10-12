@@ -11,15 +11,17 @@ namespace EDSMSync
         private SortedDictionary<DateTime, string> _sorted;
         private DateTime _lasttime;
 
-        private IDictionary<string, List<DateTime>> _batchToKey;
+        private IDictionary<string, DateTime> _dataToKey;
 
         public BagJournal()
         {
             this._sorted = new SortedDictionary<DateTime, string>();
             this._lasttime = new DateTime(1900,1,1);
 
-            this._batchToKey = new Dictionary<string, List<DateTime>>();
+            this._dataToKey = new Dictionary<string, DateTime>();
         }
+
+        public DateTime CurrentTime { get; private set; }
 
         /// <summary>
         /// Add entry to journal
@@ -39,54 +41,25 @@ namespace EDSMSync
                 }
             }
         }
-
-        /// <summary>
-        /// Return a batch of entries
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public string NextBatch(int count)
+        
+        public string NextEntry()
         {
-            StringBuilder sb = new StringBuilder();
+            if (_sorted.Count == 0) return null;
 
-            lock (_sorted)
-            {
-                // future key to remove
-                var toremove = new List<DateTime>();
+            var date = _sorted.Keys.First();
+            var text = _sorted[date];
 
-                int i = 0;
-                while (i < count && i < _sorted.Count)
-                {
-                    var key = _sorted.Keys.First();
-                    var value = _sorted[key];
-
-                    sb.Append(value);
-                    sb.Append("\n");
-                    toremove.Add(key);
-                    i++;
-                }
-
-                this._batchToKey.Add(sb.ToString() , toremove);
-            }
-
-            return sb.ToString();
+            _dataToKey.Add(text, date);
+            return text;
         }
 
-        /// <summary>
-        /// Set batch commited
-        /// </summary>
-        /// <param name="data"></param>
-        public void CommitBatch(string data)
+        public void ConfirmEntry(string data)
         {
-            var list = this._batchToKey[data];
+            var key = _dataToKey[data];
+            this.CurrentTime = key;
 
-            if (list != null)
-            {
-                foreach (var date in list )
-                {
-                    _sorted.Remove(date);
-                }
-            }
+            this._sorted.Remove(key);
+            this._dataToKey.Remove(data);
         }
 
         /// <summary>

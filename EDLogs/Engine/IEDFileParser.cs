@@ -11,6 +11,6 @@ namespace EDLogs.Engine
     {
         bool Accept(string path);
 
-        void Parse(string path);
+        bool Parse(string path);
     }
 }
