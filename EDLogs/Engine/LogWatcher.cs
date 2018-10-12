@@ -104,6 +104,8 @@ namespace EDLogs.Engine
         /// <param name="e"></param>
         private void OnChanged(object source, FileSystemEventArgs e)
         {
+            log.Info("File Changed : " + e.Name);
+
             // Copies file to another directory.
             //Program.Log("[File][" + e.ChangeType +"] " + e.FullPath);
             this.AddToQueue(e.FullPath);
@@ -118,8 +120,6 @@ namespace EDLogs.Engine
         /// <param name="path"></param>
         private void AddToQueue(string path)
         {
-            log.Info("Add File to Queue : " + path);
-
             lock (this._queued)
             {
                 if (!this._queued.Contains(path))
@@ -202,7 +202,7 @@ namespace EDLogs.Engine
 
         public void Dispatch(JournalEvent evt)
         {
-            log.Info(string.Format("[event][{0}] {1}", evt.Timestamp, evt.EventName));
+            // log.Info(string.Format("[event][{0}] {1}", evt.Timestamp, evt.EventName));
             if (this.NewJournalLog != null)
             {
                 this.NewJournalLog(evt);

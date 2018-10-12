@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using EDLogs;
 using EDLogs.Engine;
 using EDLogs.Models;
 using EDSMSync;
@@ -28,6 +29,9 @@ namespace Start
             // get edsm sample config
             var config_edsm = GetEDSMConfig();
 
+            EDConfig.Instance.Set("name", config_edsm.name);
+            EDConfig.Instance.Set("api_key", config_edsm.api_key);
+
 
             #region testing and dev : EDSMSync
 
@@ -42,8 +46,8 @@ namespace Start
 
             // fetch last date
 
-            // sync.Listen(@"C:\samplelogs\");
-            sync.Listen(@"C:\Users\VOVAU\Saved Games\Frontier Developments\Elite Dangerous");
+            sync.Listen(@"C:\samplelogs\");
+            // sync.Listen(@"C:\Users\VOVAU\Saved Games\Frontier Developments\Elite Dangerous");
 
 
             while (true)
