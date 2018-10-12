@@ -6,14 +6,17 @@ using Newtonsoft.Json.Linq;
 
 namespace EDSMSync
 {
-    public class BagJournal
+    /// <summary>
+    /// All events sorted by date
+    /// </summary>
+    public class SortedJournal
     {
         private SortedDictionary<DateTime, string> _sorted;
         private DateTime _lasttime;
 
         private IDictionary<string, DateTime> _dataToKey;
 
-        public BagJournal()
+        public SortedJournal()
         {
             this._sorted = new SortedDictionary<DateTime, string>();
             this._lasttime = new DateTime(1900,1,1);
@@ -42,6 +45,10 @@ namespace EDSMSync
             }
         }
         
+        /// <summary>
+        /// Next entry to send
+        /// </summary>
+        /// <returns></returns>
         public string NextEntry()
         {
             if (_sorted.Count == 0) return null;

@@ -9,12 +9,20 @@ namespace EDSMSync
 {
     public class ApiEDSM
     {
+
+        #region const
+
         // see : https://docs.microsoft.com/en-us/azure/architecture/antipatterns/improper-instantiation/
         private static readonly HttpClient client = new HttpClient();
 
+        // https://www.edsm.net/api-journal-v1/discard
+
         private const string POST_API_JOURNAL = "https://www.edsm.net/api-journal-v1";
 
-            
+        #endregion
+
+        #region Properties
+
         public string CommanderName { get; set; }
 
         public string ApiKey { get; set; }
@@ -22,6 +30,10 @@ namespace EDSMSync
         public string FromSoftware { get; set; }
 
         public string FromSoftwareVersion { get; set; }
+
+        #endregion
+
+        #region public method
 
         public EDSMResponse PostJournalLine(string data)
         {
@@ -42,6 +54,16 @@ namespace EDSMSync
             return result;
         }
 
+        public IList<string> GetDiscardedEvents()
+        {
+            var result = this.Get(POST_API_JOURNAL + "/discard");
+            var list = JsonConvert.DeserializeObject<List<string>>(result.Result);
+            return list;
+        }
+
+
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>
@@ -56,10 +78,10 @@ namespace EDSMSync
             return responseString;
         }
 
-        private async void Get(string url)
+        private async Task<string> Get(string url)
         {
             var responseString = await client.GetStringAsync(url);
-
+            return responseString;
         }
 
     }

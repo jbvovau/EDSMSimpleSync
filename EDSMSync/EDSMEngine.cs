@@ -16,18 +16,19 @@ namespace EDSMSync
     /// </summary>
     public class EDSMEngine
     {
-
+        // logger
         private static ILog log = LogManager.GetLogger(typeof(EDSMEngine));
 
         // EDSM API
         private ApiEDSM _api;
 
-        // log directory listener
+        // journal log directory listener
         private LogWatcher _edlogs;
 
         // manage journal log by batch
-        private BagJournal _bag;
+        private SortedJournal _bag;
 
+        // currently sending 
         private bool _send;
 
         // keep last update trace
@@ -38,12 +39,12 @@ namespace EDSMSync
 
         private DateTime _fromDate;
 
-        private readonly List<string> _discaredEvents = new List<string>();
+        private GameStatus _gameStatus;
 
         public EDSMEngine()
         {
-            this._bag = new BagJournal();
-            this.InitDiscardedEvents();
+            this._bag = new SortedJournal();
+            this._gameStatus = new GameStatus();
         }
 
 
@@ -55,6 +56,8 @@ namespace EDSMSync
         public string ApiName { get; set; }
 
         public string ApiKey { get; set; }
+
+        public IList<string> DiscaredEvents { get; private set; }
 
         public DateTime FromEventDate {
             get
@@ -114,6 +117,9 @@ namespace EDSMSync
 
             this._lastUpdate = DateTime.Now;
 
+            // load discarded events
+            this.DiscaredEvents = this.Api.GetDiscardedEvents();
+
             // define new log parser
             this._edlogs = new LogWatcher();
             this._edlogs.NewJournalLogEntry += _edlogs_NewJournalLogEntry;
@@ -139,15 +145,25 @@ namespace EDSMSync
                 // this.Api.PostJournalLine(line);
                 JournalEvent evt = JsonConvert.DeserializeObject<JournalEvent>(line);
 
+                // update game status
+                this.UpdateGameStatus(evt);
+
                 //check date
                 DateTime date = DateTime.Parse(evt.Timestamp);
 
                 if (date >= this.FromEventDate)
                 {
-                    log.Info(string.Format("[new event][{0}] {1}", evt.Timestamp, evt.EventName));
-                    lock (this._bag)
+                    // add game status to line
+                    line = this.AddGameStatusToJournalEntry(line);
+
+                    if (line != null)
                     {
-                        this._bag.AddEntry(date, line);
+
+                        log.Info(string.Format("[new event][{0}] {1}", evt.Timestamp, evt.EventName));
+                        lock (this._bag)
+                        {
+                            this._bag.AddEntry(date, line);
+                        }
                     }
                 }
             }
@@ -196,8 +212,6 @@ namespace EDSMSync
                     Thread.Sleep(500);
                     continue;
                 }
-
-                // wait 15s
 
                 var data = this._bag.NextEntry();
 
@@ -257,6 +271,101 @@ namespace EDSMSync
         }
 
 
+        /// <summary>
+        ///  (see doc here : https://www.edsm.net/fr/api-journal-v1 )
+        /// </summary>
+        /// <param name="evt"></param>
+        private void UpdateGameStatus(JournalEvent evt)
+        {
+            switch (evt.EventName)
+            {
+                case "LoadGame":
+                    _gameStatus.SystemId = 0;
+                    _gameStatus.System = null;
+                    _gameStatus.Coordinates = null;
+                    _gameStatus.StationId = null;
+                    _gameStatus.Station = null;
+                    break;
+                case "ShipyardBuy":
+                    _gameStatus.ShipId = null;
+                    break;
+                case "SetUserShipName":
+                case "ShipyardSwap":
+                case "Loadout":
+                    _gameStatus.ShipId = evt.ShipID.ToString();
+                    break;
+                case "Undocked":
+                    _gameStatus.Station = null;
+                    _gameStatus.StationId = null;
+                    break;
+                case "Location":
+                case "FSDJump":
+                case "Docked":
+
+                    if (evt.StarSystem != _gameStatus.System)
+                    {
+                        _gameStatus.Coordinates = null;
+                    }
+
+                    if (evt.StarSystem != "ProvingGround" && evt.StarSystem != "CQC")
+                    {
+                        if (evt.SystemAddress > 0)
+                        {
+                            _gameStatus.SystemId = evt.SystemAddress;
+                        }
+
+                        _gameStatus.System = evt.StarSystem;
+
+                        if (evt.StarPos != null)
+                        {
+                            _gameStatus.Coordinates = evt.StarPos;
+                        }
+                    }
+                    else
+                    {
+                        _gameStatus.System = null;
+                        _gameStatus.SystemId = 0;
+                        _gameStatus.Coordinates = null;
+                    }
+
+                    break;
+                case "JoinACrew":
+                case "QuitACrew":
+                    _gameStatus.DontSendEvents = (evt.EventName == "JoinACrew" && evt.Captain != _gameStatus.Cmdr);
+                    _gameStatus.System = null;
+                    _gameStatus.SystemId = 0;
+                    _gameStatus.Coordinates = null;
+                    _gameStatus.StationId = null;
+                    _gameStatus.Station = null;
+                    break;
+            }
+
+
+
+        }
+
+        private string AddGameStatusToJournalEntry(string data)
+        {
+            if (_gameStatus.DontSendEvents)
+            {
+                return null;
+            }
+
+            dynamic entry = JsonConvert.DeserializeObject(data);
+
+            entry._stationName = _gameStatus.Station;
+            entry._systemAddress = _gameStatus.SystemId;
+            entry._systemName = _gameStatus.System;
+            // TODO (bug) entry._systemCoordinates = _gameStatus.Coordinates;
+            entry._marketId = _gameStatus.StationId;
+            entry._shipId = _gameStatus.ShipId;
+
+            var newdata = JsonConvert.SerializeObject(entry);
+
+
+            return newdata;
+        }
+
         private bool IsDiscardedEvent(JournalEvent evt)
         {
             return this.IsDiscardedEvent(evt.EventName);
@@ -266,22 +375,10 @@ namespace EDSMSync
         {
             if (name == null) return true;
 
-            return (this._discaredEvents.Contains(name)) ;
+            return (this.DiscaredEvents.Contains(name)) ;
         }
 
-        private void InitDiscardedEvents()
-        {
-            this._discaredEvents.Clear();
-            this._discaredEvents.Add("Music");
-            this._discaredEvents.Add("HeatWarning");
-            this._discaredEvents.Add("ShipTargeted");
-            this._discaredEvents.Add("ReceiveText");
-            this._discaredEvents.Add("Shutdown");
-            this._discaredEvents.Add("DockingRequested");
-            this._discaredEvents.Add("DockingGranted");
-            this._discaredEvents.Add("UnderAttack");
-        }
-
+  
     }
 
 

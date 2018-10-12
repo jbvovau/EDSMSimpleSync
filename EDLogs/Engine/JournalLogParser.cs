@@ -88,16 +88,9 @@ namespace EDLogs.Engine
             {
                 this.Manager.DispatchJournalLog(data);
             }
+            JournalEvent e = JsonConvert.DeserializeObject<JournalEvent>(data);
+            this.AddEvent(e);
 
-            try
-            {
-                JournalEvent e = JsonConvert.DeserializeObject<JournalEvent>(data);
-                this.AddEvent(e);
-            }
-            catch (Exception ex)
-            {
-                // Program.Log("[Exception] " + ex.Message);
-            }
         }
 
         #endregion

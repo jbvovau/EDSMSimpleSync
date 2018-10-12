@@ -34,6 +34,20 @@ namespace EDLogs.Models
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
+        public long SystemAddress { get; set; }
+
+        public string Captain { get; set; }
+
+        #region ship
+
+        public string ShipName { get; set; }
+        public string ShipIdent { get; set; }
+        public int Rebuy { get; set; }
+        
+        public object Modules { get; set; }
+
+        #endregion
+
         #region login
 
         [JsonProperty(PropertyName = "package")]
@@ -87,7 +101,7 @@ namespace EDLogs.Models
 
         #region FSD Jump
 
-        public decimal [] StarPos { get; set; }
+        public List<string> StarPos { get; set; }
         public string Body { get; set; }
         public string BodyType { get; set; }
         public decimal JumpDist { get; set; }
@@ -163,5 +177,28 @@ namespace EDLogs.Models
         public object Search_And_Rescue { get; set; }
 
         #endregion
+
+        #region transcient states
+
+        [JsonProperty(PropertyName = "_systemAddress")]
+        public string _SystemAddress { get; set; }
+
+        [JsonProperty(PropertyName = "_systemName")]
+        public string _SystemName { get; set; }
+
+        [JsonProperty(PropertyName = "_systemCoordinates")]
+        public List<decimal> _SystemCoordinates { get; set; }
+
+        [JsonProperty(PropertyName = "_marketId")]
+        public string _MarketId { get; set; }
+
+        [JsonProperty(PropertyName = "_stationName")]
+        public string _StationName { get; set; }
+
+        [JsonProperty(PropertyName = "_shipId")]
+        public string _ShipId { get; set; }
+
+        #endregion
+
     }
 }
