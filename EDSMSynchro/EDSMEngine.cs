@@ -90,8 +90,11 @@ namespace EDSMSync
         public void Dispose()
         {
             this._send = false;
-            this._edlogs.Dispose();
-            this._edlogs = null;
+            if (this._edlogs != null)
+            {
+                this._edlogs.Dispose();
+                this._edlogs = null;
+            }
         }
 
         public void LoadLastDate()
@@ -103,6 +106,13 @@ namespace EDSMSync
                 if (DateTime.TryParse(data, out last))
                 {
                     this.LastEventDate = last;
+                }
+
+                if (DateTime.Now.Subtract(LastEventDate) > TimeSpan.FromDays(1))
+                {
+                    LastEventDate = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+
+                    this.customLog("WARN", "Events older than one day are not sent, please sync manually");
                 }
             }
         }
@@ -261,15 +271,22 @@ namespace EDSMSync
 
                     // post to EDSM server
                     var result = this.Api.PostJournalLine(data);
+
+                    // text result
+                    var msg = "";
+                    if (result.events != null && result.events.Length > 0)
+                    {
+                        msg = "[" + result.events[0].msgnum + " - " + result.events[0].msg + "]";
+                        this.SetLastDate(evt);
+                    } else
+                    {
+                        msg = "[" + result.msgnum + " - " + result.msg + "]";
+                    }
+
+                    // ok
                     if (result.msgnum == 100)
                     {
-                        // text result
-                        var msg = "";
-                        if (result.events != null && result.events.Length > 0)
-                        {
-                            msg = "[" + result.events[0].msgnum + " - " + result.events[0].msg + "]";
-                            this.SetLastDate(evt);
-                        }
+
 
                         if (evt != null)
                         {
@@ -292,6 +309,14 @@ namespace EDSMSync
                             this.SaveLastDate();
                         }
                         Thread.Sleep(500);
+                    } else
+                    {
+                        // not ok......
+                        customLog(evt, "ERROR", msg);
+                        if (result.msgnum == 203)
+                        {
+                            // for the moment : break
+                        }
                     }
                 } else
                 {
@@ -429,14 +454,22 @@ namespace EDSMSync
             if (this.LastEventDate < date) this.LastEventDate = date;
         }
   
+        private void customLog(string type, string message)
+        {
+            this.customLog(null, type, message);
+        }
+
         private void customLog(JournalEvent evt, string type, string message)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append('[');
-            sb.Append(evt.Timestamp);
-            sb.Append("] [");
-            sb.Append(evt.EventName.PadRight(20));
-            sb.Append("] ");
+            if (evt != null)
+            {
+                sb.Append('[');
+                sb.Append(evt.Timestamp);
+                sb.Append("] [");
+                sb.Append(evt.EventName.PadRight(20));
+                sb.Append("] ");
+            }
             sb.Append(message);
 
             logger.Info(sb.ToString());

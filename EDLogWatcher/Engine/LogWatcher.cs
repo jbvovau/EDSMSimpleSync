@@ -159,6 +159,8 @@ namespace EDLogWatcher.Engine
                     // Program.Log("[Log][PARSING] " + path);
                     foreach (var path in _queued)
                     {
+                        if (!_run) break;
+
                         // set game is alive
                         if (path.EndsWith(".log"))
                         {
@@ -190,7 +192,7 @@ namespace EDLogWatcher.Engine
                 }
 
                 // log.Debug(_watcher.EnableRaisingEvents);
-                Thread.Sleep(5000);
+                if (_run) Thread.Sleep(5000);
             }
         }
 
@@ -218,6 +220,11 @@ namespace EDLogWatcher.Engine
         private void StopQueue()
         {
             _run = false;
+
+            foreach(var parser in _parsers)
+            {
+                parser.Stop();
+            }
         }
 
         public void DispatchJournalLog(string data)

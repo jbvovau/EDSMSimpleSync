@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using EDLogWatcher.Models;
+using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Text;
-using EDLogWatcher.Models;
-using Newtonsoft.Json;
 
 namespace EDLogWatcher.Engine
 {
     public class JournalLogParser : IEDFileParser
     {
+        private bool _run;
+
         public JournalLogParser(LogWatcher manager)
         {
-            this.Manager = manager;
+            Manager = manager;
         }
 
         public LogWatcher Manager { get; private set; }
@@ -24,46 +24,54 @@ namespace EDLogWatcher.Engine
 
         public bool Parse(string path)
         {
-            if (this.Accept(path))
+            if (Accept(path))
             {
-                return this.Read(path);
+                return Read(path);
             }
             return false;
+        }
+
+        public void Stop()
+        {
+            _run = false;
         }
 
         #region read and extract events 
 
         public bool Read(string path)
         {
+            _run = true;
+
             try
             {
                 var o = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 4096, FileOptions.RandomAccess);
 
-                    using (var reader = new StreamReader(o))
+                using (var reader = new StreamReader(o))
+                {
+
+                    StringBuilder sb = new StringBuilder();
+
+                    string line = null;
+                    do
                     {
+                        line = reader.ReadLine();
 
-                        StringBuilder sb = new StringBuilder();
+                        sb.Append(line);
 
-                        string line = null;
-                        do
+                        // check current builder
+                        if (sb.ToString().Trim().EndsWith("}"))
                         {
-                            line = reader.ReadLine();
+                            AddEvent(sb.ToString());
+                            sb.Length = 0;
+                        }
+                    } while (line != null && _run);
 
-                            sb.Append(line);
+                    reader.Close();
+                }
+                return true;
 
-                            // check current builder
-                            if (sb.ToString().Trim().EndsWith("}"))
-                            {
-                                this.AddEvent(sb.ToString());
-                                sb.Length = 0;
-                            }
-                        } while (line != null);
-
-                        reader.Close();
-                    }
-                    return true;
-
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 log4net.LogManager.GetLogger(typeof(JournalLogParser)).Error("Error when reading file :" + path, ex);
             }
@@ -72,9 +80,9 @@ namespace EDLogWatcher.Engine
 
         public void AddEvent(JournalEvent evt)
         {
-            if (this.Manager != null)
+            if (Manager != null)
             {
-                this.Manager.Dispatch(evt);
+                Manager.Dispatch(evt);
             }
         }
 
@@ -84,12 +92,12 @@ namespace EDLogWatcher.Engine
         /// <param name="data"></param>
         private void AddEvent(string data)
         {
-            if (this.Manager != null)
+            if (Manager != null)
             {
-                this.Manager.DispatchJournalLog(data);
+                Manager.DispatchJournalLog(data);
             }
             JournalEvent e = JsonConvert.DeserializeObject<JournalEvent>(data);
-            this.AddEvent(e);
+            AddEvent(e);
 
         }
 

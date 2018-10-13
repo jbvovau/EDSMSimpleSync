@@ -12,5 +12,7 @@ namespace EDLogWatcher.Engine
         bool Accept(string path);
 
         bool Parse(string path);
+
+        void Stop();
     }
 }
