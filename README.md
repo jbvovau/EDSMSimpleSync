@@ -1,2 +1,1 @@
-# EDLogs
-ED Logs
+# Elite Dangerous - EDSM Simple Sync
