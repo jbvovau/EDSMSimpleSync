@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace EDSMSimpleSync
         private EDSMEngine _edsmEngine;
 
         private Thread _engineThread;
+
+        private string _appVersion = "";
 
         public FormMain()
         {
@@ -176,6 +179,12 @@ namespace EDSMSimpleSync
         private void initLog()
         {
             log4net.Config.XmlConfigurator.Configure();
+
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+
+            this.Text += " - version " + version;
         }
 
         private void btnSelectFolder_Click(object sender, EventArgs e)
