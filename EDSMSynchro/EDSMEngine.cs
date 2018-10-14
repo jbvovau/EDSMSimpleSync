@@ -37,8 +37,7 @@ namespace EDSMSync
         private bool _send;
 
         // keep last update trace
-        private readonly DateTime _dateLastEvent;
-        private readonly TimeSpan _inactivityToUpdate = TimeSpan.FromSeconds(2);
+        private readonly TimeSpan _inactivityToUpdate = TimeSpan.FromSeconds(5);
 
         private readonly string FIELD_LAST_DATE = "last_event_date";
 
@@ -67,7 +66,7 @@ namespace EDSMSync
 
         public IList<string> DiscaredEvents { get; private set; }
 
-        public DateTime LastEventDate { get; set; }
+        public DateTime LastEventSync { get; set; }
 
         public GameStatus Status
         {
@@ -97,14 +96,14 @@ namespace EDSMSync
                 DateTime last;
                 if (DateTime.TryParse(data, out last))
                 {
-                    LastEventDate = last;
+                    LastEventSync = last;
                 }
             }
         }
 
         private void SaveLastDate()
         {
-            EDConfig.Instance.Set(FIELD_LAST_DATE, LastEventDate.ToString());
+            EDConfig.Instance.Set(FIELD_LAST_DATE, LastEventSync.ToString());
         }
 
 
@@ -150,7 +149,7 @@ namespace EDSMSync
                 string key = evt.Timestamp + evt.EventName;
                 var date = DateTime.Parse(evt.Timestamp);
 
-                if (date >= LastEventDate)
+                if (date > LastEventSync)
                 {
                     // add game status to line
                     line = AddGameStatusToJournalEntry(line);
@@ -229,7 +228,6 @@ namespace EDSMSync
                         var evt = JsonConvert.DeserializeObject<JournalEvent>(data);
                         currentLastDate = evt.Timestamp;
 
-
                         if (IsDiscardedEvent(evt))
                         {
                             customLog(evt, "DEBUG", "discarded");
@@ -252,7 +250,7 @@ namespace EDSMSync
                     // parse result
                     if (result.msgnum == 100)
                     {
-                        this.LastEventDate = DateTime.Parse(currentLastDate);
+                        this.LastEventSync = DateTime.Parse(currentLastDate);
 
                         // batch result
                         if (result.events != null && result.events.Length > 0)
@@ -272,8 +270,6 @@ namespace EDSMSync
                             }
                         }
 
-
-
                         SaveLastDate();
 
                         Thread.Sleep(1000);
@@ -283,7 +279,7 @@ namespace EDSMSync
                 {
                     _lastUpdate = DateTime.Now;
                     SaveLastDate();
-                    Thread.Sleep(5000);
+                    Thread.Sleep(15000);
                 }
 
                 // remove pending events
@@ -439,16 +435,6 @@ namespace EDSMSync
             return (DiscaredEvents.Contains(name));
         }
 
-
-        private void SetLastDate(JournalEvent evt)
-        {
-            DateTime date = DateTime.Parse(evt.Timestamp);
-
-            if (LastEventDate < date)
-            {
-                LastEventDate = date;
-            }
-        }
 
         private void customLog(string type, string message)
         {

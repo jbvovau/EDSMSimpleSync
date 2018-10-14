@@ -2,8 +2,6 @@
 using EDSMDomain.Services;
 using EDSMSimpleSync.Utils;
 using EDSMSync;
-using EDUploader;
-using SyncInara;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +21,7 @@ namespace EDSMSimpleSync
     {
         private EDSMEngine _edsmEngine;
 
-        private EDUploader.UploaderEngine _uploaderEngine;
+        // private EDUploader.UploaderEngine _uploaderEngine;
 
         private Thread _engineThread;
 
@@ -82,7 +80,7 @@ namespace EDSMSimpleSync
         {
             var result = this._edsmEngine.ServiceJournal.PostJournalEntry("TEST");
 
-            if (result == null || result.msgnum == 203)
+            if (result == null || result.msgnum != 302)
             {
                 _edsmEngine_NewSyncEvent("ERROR", result.msg);
                 return false;
@@ -153,7 +151,7 @@ namespace EDSMSimpleSync
             this._edsmEngine_NewSyncEvent("APP", "Start listenning");
 
             // dev
-            this.startUploader();
+            // this.startUploader();
 
         }
 
@@ -221,6 +219,7 @@ namespace EDSMSimpleSync
         /// <summary>
         /// For new version
         /// </summary>
+        /*
         private void startUploader()
         {
             return;
@@ -240,7 +239,7 @@ namespace EDSMSimpleSync
 
             this._uploaderEngine.Listen(_edsmEngine.Directory);
         }
-
+        */
         #endregion
 
         private void initLog()
