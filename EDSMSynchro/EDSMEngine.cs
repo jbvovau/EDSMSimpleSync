@@ -27,6 +27,7 @@ namespace EDSMSync
 
         // EDSM API
         private IServiceJournal _serviceJournale;
+        private IServiceSystem _serviceSystem;
 
         // journal log directory listener
         private LogWatcher _edlogs;
