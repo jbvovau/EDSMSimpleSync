@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading;
 using EDLogWatcher;
 using EDLogWatcher.Engine;
+using EDSMDomain.Api;
 using EDSMDomain.Models;
+using EDSMDomain.Services;
 using log4net;
 using Newtonsoft.Json;
 
@@ -24,7 +26,7 @@ namespace EDSMSync
         private static ILog logger = LogManager.GetLogger(typeof(EDSMEngine));
 
         // EDSM API
-        private ApiEDSM _api;
+        private IServiceJournal _serviceJournale;
 
         // journal log directory listener
         private LogWatcher _edlogs;
@@ -55,6 +57,7 @@ namespace EDSMSync
             this._blockedEvents = new HashSet<string>();
         }
 
+        #region properties
 
         /// <summary>
         /// Elite Dangerous Journal Log Directory
@@ -69,23 +72,19 @@ namespace EDSMSync
 
         public DateTime LastEventDate { get; set; }
 
-    
-        private ApiEDSM Api
+ 
+        private IServiceJournal ServiceJournal
         {
             get
             {
-                if (_api == null)
+                if (_serviceJournale == null)
                 {
-                    _api = new ApiEDSM();
-                    _api.CommanderName = ApiName;
-                    _api.ApiKey = ApiKey;
-                    _api.FromSoftware = "EDSMSimpleSync";
-                    _api.FromSoftwareVersion = "0.0.1";
+                    this._serviceJournale = new SerivceJournal(this.ApiName, this.ApiKey);
                 }
-
-                return _api;
+                return this._serviceJournale;
             }
         }
+        #endregion
 
         public void Dispose()
         {
@@ -125,10 +124,11 @@ namespace EDSMSync
 
         public void Listen()
         {
+
             this._lastUpdate = DateTime.Now;
 
             // load discarded events
-            this.DiscaredEvents = this.Api.GetDiscardedEvents();
+            this.DiscaredEvents = this.ServiceJournal.GetDiscardedEvents();
 
             logger.Debug("Discarded Events loaded. Count : " + this.DiscaredEvents.Count);
 
@@ -270,7 +270,7 @@ namespace EDSMSync
                     }
 
                     // post to EDSM server
-                    var result = this.Api.PostJournalLine(data);
+                    var result = this.ServiceJournal.PostJournalEntry(data);
 
                     // text result
                     var msg = "";

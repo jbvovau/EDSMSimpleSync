@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using EDSMDomain.Models;
 using Newtonsoft.Json;
 
-namespace EDSMSync
+namespace EDSMDomain.Api
 {
     public class ApiEDSM
     {
@@ -23,6 +24,7 @@ namespace EDSMSync
 
         private const string SYSTEM_STATON = "/stations";
         private const string SYSTEM_FACTIONS = "/factions";
+        private const string SYSTEM_BODIES = "/bodies";
 
         private const string PARAM_SYSTEM_NAME = "systemName";
         private const string PARAM_SYSTEM_ID = "systemId";
@@ -77,24 +79,32 @@ namespace EDSMSync
 
         #region API_SYSTEM_V1
 
-        public void GetSystemSations(string systemName)
+        public string GetSystemStations(string systemName)
         {
-
+            return GetSystemStations(systemName, 0);
         }
 
-        public void GetSystemSations(string systemName, long systemId)
+        public string GetSystemStations(string systemName, long systemId)
         {
             var json = this.executeSystem(SYSTEM_STATON, systemName, systemId);
+            return json;
         }
 
-        public void GetSystemFactions(string systemName)
+        public string GetSystemFactions(string systemName)
         {
-
+            return GetSystemFactions(systemName, 0);
         }
 
-        public void GetSystemFactions(string systemName, long systemId)
+        public string GetSystemFactions(string systemName, long systemId)
         {
             var json = this.executeSystem(SYSTEM_FACTIONS, systemName, systemId);
+            return json;
+        }
+
+        public string GetCelestialBodies(string systemName, long systemId)
+        {
+            var json = this.executeSystem(SYSTEM_BODIES, systemName, systemId);
+            return json;
         }
 
         private string executeSystem(string action, string systemName, long systemId)

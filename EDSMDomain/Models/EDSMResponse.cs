@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EDSMSync
+namespace EDSMDomain.Models
 {
     public class EDSMResponse
     {

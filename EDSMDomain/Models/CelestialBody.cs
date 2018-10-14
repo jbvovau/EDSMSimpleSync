@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EDSMDomain.Models
 {
-    public class EDSMSystem
+    public class CelestialBody
     {
         [JsonProperty(PropertyName = "id")]
         public long Id { get; set; }
@@ -15,17 +15,11 @@ namespace EDSMDomain.Models
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "controllingFaction")]
-        public Faction ControllingFaction { get; set; }
+        [JsonProperty(PropertyName = "type")]
+        public string BodyType { get; set; }
 
-        [JsonProperty(PropertyName = "stations")]
-        public List<Station> Stations { get; set; }
-
-        [JsonProperty(PropertyName = "factions")]
-        public List<Faction> Factions { get; set; }
-
-        [JsonProperty(PropertyName = "bodies")]
-        public List<CelestialBody> CelestialBodies { get; set; }
+        [JsonProperty(PropertyName = "rings")]
+        public object [] Rings { get; set; }
 
         public override string ToString()
         {
