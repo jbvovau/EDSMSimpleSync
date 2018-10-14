@@ -147,9 +147,10 @@ namespace EDSMSimpleSync
                     color = Color.Red;
                 }
 
-                rtbLogs.AppendText("\n");
+                
                 int start = rtbLogs.TextLength;
                 rtbLogs.AppendText(message);
+                rtbLogs.AppendText("\n");
                 int end = rtbLogs.TextLength;
 
                 // Textbox may transform chars, so (end-start) != text.Length

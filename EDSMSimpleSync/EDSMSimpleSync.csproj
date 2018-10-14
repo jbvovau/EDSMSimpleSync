@@ -92,6 +92,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -114,12 +115,17 @@
       <Project>{14ebfb33-0cca-496d-a26c-c684f2f93dc4}</Project>
       <Name>EDLogWatcher</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EDSMDomain\EDSMDomain.csproj">
+      <Project>{68ab7525-ca08-4266-b735-3be617c2da19}</Project>
+      <Name>EDSMDomain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EDSMSynchro\EDSMSynchro.csproj">
       <Project>{9eb0e63c-b6e9-4d73-99b9-223d4a200e15}</Project>
       <Name>EDSMSynchro</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\elite-dangerous-minimalistic.png" />
     <Content Include="Sync.ico" />
   </ItemGroup>
   <ItemGroup>

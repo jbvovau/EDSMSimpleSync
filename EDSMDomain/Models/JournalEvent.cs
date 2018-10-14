@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace EDLogWatcher.Models
+namespace EDSMDomain.Models
 {
     public class JournalEvent
     {

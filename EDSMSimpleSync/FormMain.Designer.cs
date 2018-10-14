@@ -30,20 +30,30 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.rtbLogs = new System.Windows.Forms.RichTextBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.tbCmdr = new System.Windows.Forms.TextBox();
-            this.tbApiKey = new System.Windows.Forms.TextBox();
-            this.tbDirectory = new System.Windows.Forms.TextBox();
-            this.btnSelectFolder = new System.Windows.Forms.Button();
-            this.folderBrowserDialogJournal = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnStart = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.panelSettings = new System.Windows.Forms.Panel();
+            this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.btnSelectFolder = new System.Windows.Forms.Button();
+            this.tbDirectory = new System.Windows.Forms.TextBox();
+            this.tbApiKey = new System.Windows.Forms.TextBox();
+            this.tbCmdr = new System.Windows.Forms.TextBox();
+            this.folderBrowserDialogJournal = new System.Windows.Forms.FolderBrowserDialog();
+            this.splitContainerSync = new System.Windows.Forms.SplitContainer();
+            this.tabControlApp = new System.Windows.Forms.TabControl();
+            this.tabSynchro = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.panelSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerSync)).BeginInit();
+            this.splitContainerSync.Panel1.SuspendLayout();
+            this.splitContainerSync.Panel2.SuspendLayout();
+            this.splitContainerSync.SuspendLayout();
+            this.tabControlApp.SuspendLayout();
+            this.tabSynchro.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtbLogs
@@ -52,94 +62,72 @@
             this.rtbLogs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rtbLogs.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtbLogs.ForeColor = System.Drawing.Color.White;
-            this.rtbLogs.Location = new System.Drawing.Point(3, 113);
+            this.rtbLogs.Location = new System.Drawing.Point(0, 0);
             this.rtbLogs.Name = "rtbLogs";
             this.rtbLogs.ReadOnly = true;
-            this.rtbLogs.Size = new System.Drawing.Size(726, 248);
+            this.rtbLogs.Size = new System.Drawing.Size(742, 477);
             this.rtbLogs.TabIndex = 0;
-            this.rtbLogs.Text = "EDSM Simple Sync - hello !";
+            this.rtbLogs.Text = "EDSM Simple Sync - hello !\n";
             this.rtbLogs.WordWrap = false;
             // 
-            // tableLayoutPanel1
+            // panelSettings
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.rtbLogs, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(732, 364);
-            this.tableLayoutPanel1.TabIndex = 1;
+            this.panelSettings.Controls.Add(this.pictureBoxLogo);
+            this.panelSettings.Controls.Add(this.label3);
+            this.panelSettings.Controls.Add(this.label2);
+            this.panelSettings.Controls.Add(this.label1);
+            this.panelSettings.Controls.Add(this.btnStop);
+            this.panelSettings.Controls.Add(this.btnStart);
+            this.panelSettings.Controls.Add(this.btnSelectFolder);
+            this.panelSettings.Controls.Add(this.tbDirectory);
+            this.panelSettings.Controls.Add(this.tbApiKey);
+            this.panelSettings.Controls.Add(this.tbCmdr);
+            this.panelSettings.Location = new System.Drawing.Point(3, 3);
+            this.panelSettings.Name = "panelSettings";
+            this.panelSettings.Size = new System.Drawing.Size(726, 104);
+            this.panelSettings.TabIndex = 1;
             // 
-            // panel1
+            // pictureBoxLogo
             // 
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.btnStop);
-            this.panel1.Controls.Add(this.btnStart);
-            this.panel1.Controls.Add(this.btnSelectFolder);
-            this.panel1.Controls.Add(this.tbDirectory);
-            this.panel1.Controls.Add(this.tbApiKey);
-            this.panel1.Controls.Add(this.tbCmdr);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(726, 104);
-            this.panel1.TabIndex = 1;
+            this.pictureBoxLogo.Image = global::EDSMSimpleSync.Properties.Resources.elite_dangerous_minimalistic;
+            this.pictureBoxLogo.Location = new System.Drawing.Point(3, 9);
+            this.pictureBoxLogo.Name = "pictureBoxLogo";
+            this.pictureBoxLogo.Size = new System.Drawing.Size(81, 75);
+            this.pictureBoxLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxLogo.TabIndex = 9;
+            this.pictureBoxLogo.TabStop = false;
             // 
-            // tbCmdr
+            // label3
             // 
-            this.tbCmdr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCmdr.Location = new System.Drawing.Point(68, 18);
-            this.tbCmdr.Name = "tbCmdr";
-            this.tbCmdr.Size = new System.Drawing.Size(162, 22);
-            this.tbCmdr.TabIndex = 0;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(90, 70);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(52, 16);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Journal";
             // 
-            // tbApiKey
+            // label2
             // 
-            this.tbApiKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbApiKey.Location = new System.Drawing.Point(68, 45);
-            this.tbApiKey.Name = "tbApiKey";
-            this.tbApiKey.Size = new System.Drawing.Size(471, 22);
-            this.tbApiKey.TabIndex = 1;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(90, 42);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(54, 16);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Api Key";
             // 
-            // tbDirectory
+            // label1
             // 
-            this.tbDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDirectory.Location = new System.Drawing.Point(68, 71);
-            this.tbDirectory.Name = "tbDirectory";
-            this.tbDirectory.Size = new System.Drawing.Size(387, 22);
-            this.tbDirectory.TabIndex = 2;
-            // 
-            // btnSelectFolder
-            // 
-            this.btnSelectFolder.Location = new System.Drawing.Point(462, 71);
-            this.btnSelectFolder.Name = "btnSelectFolder";
-            this.btnSelectFolder.Size = new System.Drawing.Size(75, 23);
-            this.btnSelectFolder.TabIndex = 3;
-            this.btnSelectFolder.Text = "Select";
-            this.btnSelectFolder.UseVisualStyleBackColor = true;
-            this.btnSelectFolder.Click += new System.EventHandler(this.btnSelectFolder_Click);
-            // 
-            // btnStart
-            // 
-            this.btnStart.Location = new System.Drawing.Point(602, 18);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(75, 23);
-            this.btnStart.TabIndex = 4;
-            this.btnStart.Text = "Start";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(90, 14);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 16);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Name";
             // 
             // btnStop
             // 
             this.btnStop.Enabled = false;
-            this.btnStop.Location = new System.Drawing.Point(602, 61);
+            this.btnStop.Location = new System.Drawing.Point(464, 9);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 5;
@@ -147,45 +135,121 @@
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
-            // label1
+            // btnStart
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 26);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Name";
+            this.btnStart.Location = new System.Drawing.Point(380, 8);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(75, 23);
+            this.btnStart.TabIndex = 4;
+            this.btnStart.Text = "Start";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
-            // label2
+            // btnSelectFolder
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 50);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Api Key";
+            this.btnSelectFolder.Location = new System.Drawing.Point(464, 65);
+            this.btnSelectFolder.Name = "btnSelectFolder";
+            this.btnSelectFolder.Size = new System.Drawing.Size(75, 23);
+            this.btnSelectFolder.TabIndex = 3;
+            this.btnSelectFolder.Text = "Select";
+            this.btnSelectFolder.UseVisualStyleBackColor = true;
+            this.btnSelectFolder.Click += new System.EventHandler(this.btnSelectFolder_Click);
             // 
-            // label3
+            // tbDirectory
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 71);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Journal";
+            this.tbDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbDirectory.Location = new System.Drawing.Point(145, 65);
+            this.tbDirectory.Name = "tbDirectory";
+            this.tbDirectory.Size = new System.Drawing.Size(310, 22);
+            this.tbDirectory.TabIndex = 2;
+            // 
+            // tbApiKey
+            // 
+            this.tbApiKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbApiKey.Location = new System.Drawing.Point(145, 37);
+            this.tbApiKey.Name = "tbApiKey";
+            this.tbApiKey.Size = new System.Drawing.Size(394, 22);
+            this.tbApiKey.TabIndex = 1;
+            // 
+            // tbCmdr
+            // 
+            this.tbCmdr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbCmdr.Location = new System.Drawing.Point(145, 9);
+            this.tbCmdr.Name = "tbCmdr";
+            this.tbCmdr.Size = new System.Drawing.Size(229, 22);
+            this.tbCmdr.TabIndex = 0;
+            // 
+            // splitContainerSync
+            // 
+            this.splitContainerSync.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerSync.Location = new System.Drawing.Point(3, 3);
+            this.splitContainerSync.Name = "splitContainerSync";
+            this.splitContainerSync.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerSync.Panel1
+            // 
+            this.splitContainerSync.Panel1.Controls.Add(this.panelSettings);
+            this.splitContainerSync.Panel1MinSize = 120;
+            // 
+            // splitContainerSync.Panel2
+            // 
+            this.splitContainerSync.Panel2.Controls.Add(this.rtbLogs);
+            this.splitContainerSync.Panel2MinSize = 0;
+            this.splitContainerSync.Size = new System.Drawing.Size(742, 601);
+            this.splitContainerSync.SplitterDistance = 120;
+            this.splitContainerSync.TabIndex = 2;
+            // 
+            // tabControlApp
+            // 
+            this.tabControlApp.Controls.Add(this.tabSynchro);
+            this.tabControlApp.Controls.Add(this.tabPage2);
+            this.tabControlApp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlApp.Location = new System.Drawing.Point(0, 0);
+            this.tabControlApp.Name = "tabControlApp";
+            this.tabControlApp.SelectedIndex = 0;
+            this.tabControlApp.Size = new System.Drawing.Size(756, 633);
+            this.tabControlApp.TabIndex = 3;
+            // 
+            // tabSynchro
+            // 
+            this.tabSynchro.Controls.Add(this.splitContainerSync);
+            this.tabSynchro.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabSynchro.Location = new System.Drawing.Point(4, 22);
+            this.tabSynchro.Name = "tabSynchro";
+            this.tabSynchro.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSynchro.Size = new System.Drawing.Size(748, 607);
+            this.tabSynchro.TabIndex = 0;
+            this.tabSynchro.Text = "Sync";
+            this.tabSynchro.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1035, 689);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(732, 364);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.ClientSize = new System.Drawing.Size(756, 633);
+            this.Controls.Add(this.tabControlApp);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
             this.Text = "EDSM Simple Sync";
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.panelSettings.ResumeLayout(false);
+            this.panelSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
+            this.splitContainerSync.Panel1.ResumeLayout(false);
+            this.splitContainerSync.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerSync)).EndInit();
+            this.splitContainerSync.ResumeLayout(false);
+            this.tabControlApp.ResumeLayout(false);
+            this.tabSynchro.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -193,8 +257,7 @@
         #endregion
 
         private System.Windows.Forms.RichTextBox rtbLogs;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panelSettings;
         private System.Windows.Forms.TextBox tbDirectory;
         private System.Windows.Forms.TextBox tbApiKey;
         private System.Windows.Forms.TextBox tbCmdr;
@@ -205,6 +268,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBoxLogo;
+        private System.Windows.Forms.SplitContainer splitContainerSync;
+        private System.Windows.Forms.TabControl tabControlApp;
+        private System.Windows.Forms.TabPage tabSynchro;
+        private System.Windows.Forms.TabPage tabPage2;
     }
 }
 

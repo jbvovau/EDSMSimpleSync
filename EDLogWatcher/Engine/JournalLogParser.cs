@@ -1,4 +1,4 @@
-﻿using EDLogWatcher.Models;
+﻿using EDSMDomain.Models;
 using Newtonsoft.Json;
 using System;
 using System.IO;

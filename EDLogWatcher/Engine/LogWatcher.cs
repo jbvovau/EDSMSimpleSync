@@ -1,4 +1,4 @@
-﻿using EDLogWatcher.Models;
+﻿using EDSMDomain.Models;
 using log4net;
 using System;
 using System.Collections.Generic;

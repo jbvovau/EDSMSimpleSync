@@ -61,6 +61,10 @@
       <Project>{14ebfb33-0cca-496d-a26c-c684f2f93dc4}</Project>
       <Name>EDLogWatcher</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EDSMDomain\EDSMDomain.csproj">
+      <Project>{68ab7525-ca08-4266-b735-3be617c2da19}</Project>
+      <Name>EDSMDomain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

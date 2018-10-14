@@ -17,7 +17,15 @@ namespace EDSMSync
 
         // https://www.edsm.net/api-journal-v1/discard
 
-        private const string POST_API_JOURNAL = "https://www.edsm.net/api-journal-v1";
+        private const string API_JOURNAL_V1 = "https://www.edsm.net/api-journal-v1";
+
+        private const string API_SYSTEM_V1 = "https://www.edsm.net/api-system-v1";
+
+        private const string SYSTEM_STATON = "/stations";
+        private const string SYSTEM_FACTIONS = "/factions";
+
+        private const string PARAM_SYSTEM_NAME = "systemName";
+        private const string PARAM_SYSTEM_ID = "systemId";
 
         #endregion
 
@@ -33,7 +41,7 @@ namespace EDSMSync
 
         #endregion
 
-        #region public method
+        #region API_JOURNAL_V1 method https://www.edsm.net/fr/api-journal-v1
 
         public EDSMResponse PostJournalLine(string data)
         {
@@ -46,7 +54,7 @@ namespace EDSMSync
                 {"message", data }
             };
 
-            var taskResponseTask = this.Post(POST_API_JOURNAL, values);
+            var taskResponseTask = this.Post(API_JOURNAL_V1, values);
 
             var value = taskResponseTask.Result;
 
@@ -56,7 +64,7 @@ namespace EDSMSync
 
         public IList<string> GetDiscardedEvents()
         {
-            var result = this.Get(POST_API_JOURNAL + "/discard");
+            var result = this.Get(API_JOURNAL_V1 + "/discard");
             while (!result.IsCompleted)
             {
                 System.Threading.Thread.Sleep(500);
@@ -65,8 +73,54 @@ namespace EDSMSync
             return list;
         }
 
+        #endregion
+
+        #region API_SYSTEM_V1
+
+        public void GetSystemSations(string systemName)
+        {
+
+        }
+
+        public void GetSystemSations(string systemName, long systemId)
+        {
+            var json = this.executeSystem(SYSTEM_STATON, systemName, systemId);
+        }
+
+        public void GetSystemFactions(string systemName)
+        {
+
+        }
+
+        public void GetSystemFactions(string systemName, long systemId)
+        {
+            var json = this.executeSystem(SYSTEM_FACTIONS, systemName, systemId);
+        }
+
+        private string executeSystem(string action, string systemName, long systemId)
+        {
+            StringBuilder sb = new StringBuilder(API_SYSTEM_V1);
+            sb.Append(action);
+            sb.Append('?');
+            sb.Append(PARAM_SYSTEM_NAME);
+            sb.Append('=');
+            sb.Append(systemName);
+
+            if (systemId > 0)
+            {
+                sb.Append('&');
+                sb.Append(PARAM_SYSTEM_ID);
+                sb.Append('=');
+                sb.Append(systemId);
+            }
+
+            return this.Get(sb.ToString()).Result;
+        }
+
 
         #endregion
+
+        #region private
 
         /// <summary>
         /// 
@@ -88,6 +142,9 @@ namespace EDSMSync
             response = await client.GetStringAsync(url);
             return response;
         }
+
+        #endregion
+
 
     }
 }

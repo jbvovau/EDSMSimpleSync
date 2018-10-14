@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{14EBFB33-0CCA-496D-A26C-C684F2F93DC4}</ProjectGuid>
+    <ProjectGuid>{68AB7525-CA08-4266-B735-3BE617C2DA19}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EDLogWatcher</RootNamespace>
-    <AssemblyName>EDLogWatcher</AssemblyName>
+    <RootNamespace>EDSMDomain</RootNamespace>
+    <AssemblyName>EDSMDomain</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -47,20 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EDConfig.cs" />
-    <Compile Include="Engine\IEDFileParser.cs" />
-    <Compile Include="Engine\JournalLogParser.cs" />
-    <Compile Include="Engine\LogWatcher.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Models\BankAccount.cs" />
+    <Compile Include="Models\EDSMSystem.cs" />
+    <Compile Include="Models\Journal.cs" />
+    <Compile Include="Models\JournalEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EDSMDomain\EDSMDomain.csproj">
-      <Project>{68ab7525-ca08-4266-b735-3be617c2da19}</Project>
-      <Name>EDSMDomain</Name>
-    </ProjectReference>
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

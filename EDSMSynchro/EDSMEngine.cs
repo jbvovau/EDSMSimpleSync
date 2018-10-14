@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using EDLogWatcher;
 using EDLogWatcher.Engine;
-using EDLogWatcher.Models;
+using EDSMDomain.Models;
 using log4net;
 using Newtonsoft.Json;
 
@@ -37,7 +37,7 @@ namespace EDSMSync
 
         // keep last update trace
         private DateTime _dateLastEvent;
-        private readonly TimeSpan _inactivityToUpdate = TimeSpan.FromSeconds(3) ;
+        private readonly TimeSpan _inactivityToUpdate = TimeSpan.FromSeconds(2) ;
 
         private readonly string FIELD_LAST_DATE = "last_event_date";
 
@@ -108,11 +108,11 @@ namespace EDSMSync
                     this.LastEventDate = last;
                 }
 
-                if (DateTime.Now.Subtract(LastEventDate) > TimeSpan.FromDays(1))
+                if (DateTime.Now.Subtract(LastEventDate) > TimeSpan.FromDays(7))
                 {
-                    LastEventDate = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+                    LastEventDate = DateTime.Now.Subtract(TimeSpan.FromDays(7));
 
-                    this.customLog("WARN", "Events older than one day are not sent, please sync manually");
+                    this.customLog("WARN", "Events older than seven days are not sent, please sync manually");
                 }
             }
         }
