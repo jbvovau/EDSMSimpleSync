@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("EDSMSimpleSync")]
-[assembly: AssemblyDescription("Sync Elite Dangerous logs to EDSM")]
+[assembly: AssemblyTitle("SyncInara")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("By JB Vovau")]
-[assembly: AssemblyCopyright("Copyright ©  2018 - JB Vovau")]
+[assembly: AssemblyProduct("SyncInara")]
+[assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Le GUID suivant est pour l'ID de la typelib si ce projet est exposé à COM
-[assembly: Guid("739888ee-ea2d-4031-a32c-cbb1b3978e95")]
+[assembly: Guid("99881e0c-3238-4736-935c-9d2ebca09218")]
 
 // Les informations de version pour un assembly se composent des quatre valeurs suivantes :
 //
@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("0.0.2.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

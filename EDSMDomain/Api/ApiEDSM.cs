@@ -8,13 +8,11 @@ using Newtonsoft.Json;
 
 namespace EDSMDomain.Api
 {
-    public class ApiEDSM
+    public class ApiEDSM : RestApi
     {
 
         #region const
 
-        // see : https://docs.microsoft.com/en-us/azure/architecture/antipatterns/improper-instantiation/
-        private static readonly HttpClient client = new HttpClient();
 
         // https://www.edsm.net/api-journal-v1/discard
 
@@ -31,18 +29,8 @@ namespace EDSMDomain.Api
 
         #endregion
 
-        #region Properties
 
-        public string CommanderName { get; set; }
-
-        public string ApiKey { get; set; }
-
-        public string FromSoftware { get; set; }
-
-        public string FromSoftwareVersion { get; set; }
-
-        #endregion
-
+    
         #region API_JOURNAL_V1 method https://www.edsm.net/fr/api-journal-v1
 
         public EDSMResponse PostJournalLine(string data)
@@ -127,31 +115,6 @@ namespace EDSMDomain.Api
             return this.Get(sb.ToString()).Result;
         }
 
-
-        #endregion
-
-        #region private
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="values"></param>
-        private async Task<string> Post(string url, Dictionary<string, string> values)
-        {
-            var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(url, content);
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            return responseString;
-        }
-
-        private async Task<string> Get(string url)
-        {
-            string response = null;
-            response = await client.GetStringAsync(url);
-            return response;
-        }
 
         #endregion
 

@@ -1,5 +1,4 @@
-﻿using EDSMDomain.Models;
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,21 +10,9 @@ namespace EDLogWatcher.Engine
     {
         private static ILog log = LogManager.GetLogger(typeof(LogWatcher));
 
-        public delegate void JournalLogHandler(JournalEvent e);
-
         public delegate void JournalLogEntryHandler(string line);
 
-        /// <summary>
-        ///  when a new entry comes in live
-        /// </summary>
-        public event JournalLogHandler NewJournalLog;
-
         public event JournalLogEntryHandler NewJournalLogEntry;
-
-        /// <summary>
-        /// Every journal log parsed, even old ones
-        /// </summary>
-        public event JournalLogHandler AllJournalLog;
 
         // file watcher
         private FileSystemWatcher _watcher;
@@ -227,7 +214,7 @@ namespace EDLogWatcher.Engine
             }
         }
 
-        public void DispatchJournalLog(string data)
+        public void Dispatch(string data)
         {
             if (NewJournalLogEntry != null)
             {
@@ -235,14 +222,6 @@ namespace EDLogWatcher.Engine
             }
         }
 
-        public void Dispatch(JournalEvent evt)
-        {
-            // log.Info(string.Format("[event][{0}] {1}", evt.Timestamp, evt.EventName));
-            if (NewJournalLog != null)
-            {
-                NewJournalLog(evt);
-            }
-        }
 
         #endregion
 

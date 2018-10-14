@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\MemoryStorage.cs" />
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -122,6 +123,14 @@
     <ProjectReference Include="..\EDSMSynchro\EDSMSynchro.csproj">
       <Project>{9eb0e63c-b6e9-4d73-99b9-223d4a200e15}</Project>
       <Name>EDSMSynchro</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDUploader\EDUploader.csproj">
+      <Project>{5c64b9af-c25a-4dc1-a6b1-6889096a07c3}</Project>
+      <Name>EDUploader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SyncInara\SyncInara.csproj">
+      <Project>{99881e0c-3238-4736-935c-9d2ebca09218}</Project>
+      <Name>SyncInara</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

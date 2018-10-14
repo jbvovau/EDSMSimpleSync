@@ -1,5 +1,4 @@
-﻿using EDSMDomain.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
@@ -78,13 +77,6 @@ namespace EDLogWatcher.Engine
             return false;
         }
 
-        public void AddEvent(JournalEvent evt)
-        {
-            if (Manager != null)
-            {
-                Manager.Dispatch(evt);
-            }
-        }
 
         /// <summary>
         /// Add Event by data
@@ -94,11 +86,8 @@ namespace EDLogWatcher.Engine
         {
             if (Manager != null)
             {
-                Manager.DispatchJournalLog(data);
+                Manager.Dispatch(data);
             }
-            JournalEvent e = JsonConvert.DeserializeObject<JournalEvent>(data);
-            AddEvent(e);
-
         }
 
         #endregion

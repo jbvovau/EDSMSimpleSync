@@ -8,8 +8,8 @@ namespace EDSMSync
     {
         public long SystemId;
         public string System;
-        public List<string> Coordinates;
-        public string StationId;
+        public List<decimal> Coordinates;
+        public long StationId;
         public string Station;
         public string ShipId;
 

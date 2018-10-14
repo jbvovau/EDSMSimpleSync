@@ -45,13 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\ApiEDSM.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="Api\RestApi.cs" />
     <Compile Include="Models\BankAccount.cs" />
     <Compile Include="Models\CelestialBody.cs" />
     <Compile Include="Models\EDSMResponse.cs" />
     <Compile Include="Models\EDSMSystem.cs" />
     <Compile Include="Models\Faction.cs" />
-    <Compile Include="Models\Journal.cs" />
     <Compile Include="Models\JournalEvent.cs" />
     <Compile Include="Models\Station.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -33,9 +33,6 @@ namespace EDSMDomain.Models
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
-
-        public long SystemAddress { get; set; }
-
         public string Captain { get; set; }
 
         #region ship
@@ -84,6 +81,8 @@ namespace EDSMDomain.Models
 
         public string StationName { get; set; }
         public string StationType { get; set; }
+        public long SystemAddress { get; set; }
+        public long MarketID { get; set; }
         public string Outpost { get; set; }
         public string StarSystem { get; set; }
         public string Faction { get; set; }
@@ -92,6 +91,9 @@ namespace EDSMDomain.Models
         public string Economy { get; set; }
         public string Government { get; set; }
         public string Security { get; set; }
+
+        public long Population { get; set; }
+
         #endregion
 
         #region Docking
@@ -101,9 +103,10 @@ namespace EDSMDomain.Models
 
         #region FSD Jump
 
-        public List<string> StarPos { get; set; }
+        public List<decimal> StarPos { get; set; }
         public string Body { get; set; }
         public string BodyType { get; set; }
+        public long BodyID { get; set; }
         public decimal JumpDist { get; set; }
         public decimal FuelUsed { get; set; }
         public decimal FuelLevel { get; set; }

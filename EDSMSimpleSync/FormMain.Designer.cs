@@ -45,7 +45,10 @@
             this.splitContainerSync = new System.Windows.Forms.SplitContainer();
             this.tabControlApp = new System.Windows.Forms.TabControl();
             this.tabSynchro = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabCurrentSystem = new System.Windows.Forms.TabPage();
+            this.labelCurrentSystem = new System.Windows.Forms.Label();
+            this.tbCurrentSystem = new System.Windows.Forms.TextBox();
+            this.tbCurrentStation = new System.Windows.Forms.TextBox();
             this.panelSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerSync)).BeginInit();
@@ -54,6 +57,7 @@
             this.splitContainerSync.SuspendLayout();
             this.tabControlApp.SuspendLayout();
             this.tabSynchro.SuspendLayout();
+            this.tabCurrentSystem.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtbLogs
@@ -202,7 +206,7 @@
             // tabControlApp
             // 
             this.tabControlApp.Controls.Add(this.tabSynchro);
-            this.tabControlApp.Controls.Add(this.tabPage2);
+            this.tabControlApp.Controls.Add(this.tabCurrentSystem);
             this.tabControlApp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlApp.Location = new System.Drawing.Point(0, 0);
             this.tabControlApp.Name = "tabControlApp";
@@ -222,15 +226,43 @@
             this.tabSynchro.Text = "Sync";
             this.tabSynchro.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // tabCurrentSystem
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1035, 689);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabCurrentSystem.Controls.Add(this.tbCurrentStation);
+            this.tabCurrentSystem.Controls.Add(this.tbCurrentSystem);
+            this.tabCurrentSystem.Controls.Add(this.labelCurrentSystem);
+            this.tabCurrentSystem.Location = new System.Drawing.Point(4, 22);
+            this.tabCurrentSystem.Name = "tabCurrentSystem";
+            this.tabCurrentSystem.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCurrentSystem.Size = new System.Drawing.Size(748, 607);
+            this.tabCurrentSystem.TabIndex = 1;
+            this.tabCurrentSystem.Text = "System";
+            this.tabCurrentSystem.UseVisualStyleBackColor = true;
+            // 
+            // labelCurrentSystem
+            // 
+            this.labelCurrentSystem.AutoSize = true;
+            this.labelCurrentSystem.Location = new System.Drawing.Point(24, 26);
+            this.labelCurrentSystem.Name = "labelCurrentSystem";
+            this.labelCurrentSystem.Size = new System.Drawing.Size(78, 13);
+            this.labelCurrentSystem.TabIndex = 0;
+            this.labelCurrentSystem.Text = "Current System";
+            // 
+            // tbCurrentSystem
+            // 
+            this.tbCurrentSystem.Location = new System.Drawing.Point(109, 18);
+            this.tbCurrentSystem.Name = "tbCurrentSystem";
+            this.tbCurrentSystem.ReadOnly = true;
+            this.tbCurrentSystem.Size = new System.Drawing.Size(260, 20);
+            this.tbCurrentSystem.TabIndex = 1;
+            // 
+            // tbCurrentStation
+            // 
+            this.tbCurrentStation.Location = new System.Drawing.Point(109, 45);
+            this.tbCurrentStation.Name = "tbCurrentStation";
+            this.tbCurrentStation.ReadOnly = true;
+            this.tbCurrentStation.Size = new System.Drawing.Size(260, 20);
+            this.tbCurrentStation.TabIndex = 2;
             // 
             // FormMain
             // 
@@ -250,6 +282,8 @@
             this.splitContainerSync.ResumeLayout(false);
             this.tabControlApp.ResumeLayout(false);
             this.tabSynchro.ResumeLayout(false);
+            this.tabCurrentSystem.ResumeLayout(false);
+            this.tabCurrentSystem.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -272,7 +306,10 @@
         private System.Windows.Forms.SplitContainer splitContainerSync;
         private System.Windows.Forms.TabControl tabControlApp;
         private System.Windows.Forms.TabPage tabSynchro;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabCurrentSystem;
+        private System.Windows.Forms.Label labelCurrentSystem;
+        private System.Windows.Forms.TextBox tbCurrentSystem;
+        private System.Windows.Forms.TextBox tbCurrentStation;
     }
 }
 
