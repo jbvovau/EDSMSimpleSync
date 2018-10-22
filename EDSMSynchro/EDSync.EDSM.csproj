@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="ApiEDSM.cs" />
     <Compile Include="EDSMEngine.cs" />
+    <Compile Include="EDSMResponse.cs" />
     <Compile Include="GameStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerivceJournal.cs" />

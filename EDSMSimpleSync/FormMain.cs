@@ -73,11 +73,6 @@ namespace EDSMSimpleSync
                 EDConfig.Instance.Set("journal_log", journal_log);
             }
 
-            // date
-            DateTime lastEvent;
-            DateTime.TryParse(EDConfig.Instance.Get("last_event_date"), out lastEvent);
-            EDConfig.Instance.Set("last_event_date", lastEvent.ToString());
-
             this.tbApiKey.Text = customConfig.ApiKey;
             this.tbCmdr.Text = customConfig.CommanderName;
             this.tbDirectory.Text = journal_log;
@@ -156,6 +151,9 @@ namespace EDSMSimpleSync
             // build a new sync engine
             this._syncEngine = this.buildEngine();
 
+            // listen events
+            this._syncEngine.SyncMessageHandler += syncMessage;
+
             // test folder
             if (!Directory.Exists(this._syncEngine.DirectoryListener.Directory))
             {
@@ -187,8 +185,17 @@ namespace EDSMSimpleSync
 
         }
 
+        private void syncMessage(string source, string type, string message)
+        {
+            _edsmEngine_NewSyncEvent(type, "[" + source + "] " + message);
+        }
+
         private void _edsmEngine_NewSyncEvent(string type, string message)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                message = "<EMPTY>";
+            }
 
             this.Invoke((MethodInvoker)delegate
             {
@@ -376,8 +383,8 @@ namespace EDSMSimpleSync
             api.FromSoftwareVersion = _appVersion;
             api.FromSoftware = "EliteSimpleSync";
 
-            // _edsmEngine.ServiceJournal = new SerivceJournal(api);
-            _edsmEngine.ServiceJournal = new VoidServiceJournal();
+            _edsmEngine.ServiceJournal = new SerivceJournal(api);
+            // _edsmEngine.ServiceJournal = new VoidServiceJournal();
             _edsmEngine.ServiceSystem = new CacheServiceSystem(new ServiceSystem(), new MemoryStorage());
             _edsmEngine.Configure();
 
@@ -395,7 +402,7 @@ namespace EDSMSimpleSync
             // tmp
             service = new VoidServiceJournal();
 
-            var inara = new SyncPlugin(filter);
+            var inara = new SyncPlugin(filter, "Inara");
             inara.ServiceJournal = service;
 
             return inara;

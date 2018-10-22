@@ -21,6 +21,6 @@ namespace EDLogWatcher.Parser
         /// Add a new journal entry
         /// </summary>
         /// <param name="data"></param>
-        void AddEntry(string data);
+        bool AddEntry(string data);
     }
 }

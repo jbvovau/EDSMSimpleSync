@@ -86,8 +86,12 @@ namespace EDLogWatcher.Watcher
         public void Stop()
         {
             this._run = false;
-            this._watcher.EnableRaisingEvents = false;
-            this._watcher.Dispose();
+            if (this._watcher != null)
+            {
+                this._watcher.EnableRaisingEvents = false;
+                this._watcher.Dispose();
+                this._watcher = null;
+            }
             this.StopQueue();
         }
 

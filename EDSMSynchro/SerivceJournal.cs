@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EDSMDomain.Api;
 using EDSMDomain.Models;
 using EDSMDomain.Services;
+using Newtonsoft.Json;
 
 namespace EDSync.EDSM
 {
@@ -25,7 +26,16 @@ namespace EDSync.EDSM
 
         public JournalResponse PostJournalEntry(IList<string> lines)
         {
-            throw new NotImplementedException();
+            if (lines == null || lines.Count == 0) return new JournalResponse { Message = "Nothing to send", MessageNumber = 100 };
+
+            var list = new List<object>();
+
+            foreach(var line in lines)
+            {
+                list.Add(JsonConvert.DeserializeObject(line));
+            }
+
+            return PostJournalEntry(JsonConvert.SerializeObject(list));
         }
 
         public JournalResponse PostJournalEntry(string data)

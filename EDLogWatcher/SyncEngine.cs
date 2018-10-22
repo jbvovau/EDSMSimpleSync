@@ -8,6 +8,7 @@ using EDLogWatcher.Watcher;
 using EDSync.Core.Filter;
 using EDSync.Core.Parser;
 using System.Threading;
+using EDSync.Core;
 
 namespace EDUploader
 {
@@ -16,14 +17,21 @@ namespace EDUploader
     /// </summary>
     public class SyncEngine : IEntryManager
     {
+        public delegate void SyncMessage(string source, string type, string message);
+        public event SyncMessage SyncMessageHandler;
 
         private bool _sending;
         private Thread _sender;
+
+        private bool _paused;
+
+        private int _countNewEntry = 0;
 
         public SyncEngine(IDirectoryListener directoryListener)
         {
             this.DirectoryListener = directoryListener;
             this.EntryManagers = new List<IEntryManager>();
+            this._paused = false;
         }
 
         /// <summary>
@@ -79,24 +87,46 @@ namespace EDUploader
             this.DirectoryListener.ReadAll();
 
             this.startSending();
+
+            customMessage("SYNC", "INFO", "Synchro started");
         }
 
         public void Stop()
         {
             this.DirectoryListener.Stop();
             this._sending = false;
+            customMessage("SYNC", "INFO", "Synchro Stopped");
         }
 
-        public void AddEntry(string data)
+        public bool AddEntry(string data)
         {
-            foreach(var manager in this.EntryManagers)
+            this._paused = false;
+
+            foreach (var manager in this.EntryManagers)
             {
-                manager.AddEntry(data);
+                var isnew = manager.AddEntry(data);
+                if (isnew)
+                {
+                    if (_countNewEntry++ < 50)
+                    {
+                        string name = Utils.GetName(data);
+                        string timestamp = Utils.GetTimestamp(data);
+                        customMessage("SYNC", "DEBUG", "New Entry : " + timestamp + " " + name);
+                    }
+                    if (_countNewEntry == 50)
+                    {
+                        customMessage("SYNC", "DEBUG", "(...wow so much entries very journal)");
+                    }
+                }
             }
+
+            return true;
         }
 
         private void Send(int count)
         {
+            bool somethingHappened = false;
+
             foreach(var em in this.EntryManagers)
             {
                 var set = em as SyncPlugin;
@@ -104,16 +134,44 @@ namespace EDUploader
                 {
                     // check last activity
                     var span = DateTime.Now.Subtract(set.LastActivity);
-                    if (span < TimeSpan.FromSeconds(25)) continue;
+                    if (span < TimeSpan.FromSeconds(5))
+                    {
+                        somethingHappened = true;
+                        continue;
+                    }
 
                     var list = set.Next(count);
+
+                    if (list.Count == 0) continue;
+
+                    somethingHappened = true;
+                    _countNewEntry = 0;
+
+                    customMessage(set.Name, "SYNC", "Start sending data : " + list.Count);
                     var response = set.ServiceJournal.PostJournalEntry(list);
                     if (response.MessageNumber == 100)
                     {
+                        // build reply
+                        for (int i = 0 ; i < list.Count; i++)
+                        {
+                            var evt = list[i];
+                            var name = Utils.GetName(evt);
+                            var timestamp = Utils.GetTimestamp(evt);
+                            customMessage(set.Name, "SYNC", string.Format("[{0}] {1} {2}", timestamp, name.PadRight(25), response.GetMessageAt(i)));
+                        }
+
                         set.Remove(list);
+                        customMessage(set.Name, "SYNC", "Data sent : " + list.Count);
                     }
                 }
             }
+
+            if (!somethingHappened)
+            {
+                customMessage("SYNC", "INFO", "Sending is paused");
+                this._paused = true;
+            }
+
         }
 
         private void build()
@@ -129,6 +187,13 @@ namespace EDUploader
             }
         }
 
+        private void customMessage(string source, string type, string message)
+        {
+            if (this.SyncMessageHandler != null)
+            {
+                this.SyncMessageHandler(source, type, message);
+            }
+        }
 
         #region sender thread
 
@@ -145,9 +210,13 @@ namespace EDUploader
 
             while (this._sending)
             {
-                this.Send(40);
-
-                Thread.Sleep(10);
+                if (!this._paused) { 
+                    this.Send(40);
+                    Thread.Sleep(2000);
+                } else
+                {
+                    Thread.Sleep(10000);
+                }
             }
 
             Console.WriteLine("Sending thread finished");

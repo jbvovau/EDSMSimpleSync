@@ -23,9 +23,6 @@ namespace EDSync.EDSM
     {
         private const int MAX_PER_BATCH = 50;
 
-        // sync Details
-        public delegate void SyncEvent(string type, string message);
-        public event SyncEvent NewSyncEvent;
 
         #region private fields
 
@@ -37,7 +34,7 @@ namespace EDSync.EDSM
         private DateTime _lastGameStatisDate;
         #endregion
 
-        public EDSMEngine(IEntryFilter filter) : base(filter)
+        public EDSMEngine(IEntryFilter filter) : base(filter, "EDSM")
         {
             _gameStatus = new GameStatus();
         }
@@ -73,25 +70,28 @@ namespace EDSync.EDSM
         /// New entry 
         /// </summary>
         /// <param name="line"></param>
-        public override void AddEntry(string line)
+        public override bool AddEntry(string line)
         {
+            bool result = false;
 
             try
             {
                 // this.Api.PostJournalLine(line);
-                JournalEvent evt = JsonConvert.DeserializeObject<JournalEvent>(line);
+                var name = Utils.GetName(line);
+                if (this.IsDiscardedEvent(name))
+                {
+                    return false;
+                }
 
                 // update game status
-                UpdateGameStatus(evt);
+                UpdateGameStatus(line);
 
                 // add game status to line
                 line = AddGameStatusToJournalEntry(line);
 
                 if (line != null)
                 {
-                    base.AddEntry(line);
-
-                    customLog(evt, "EVENT", "new event");
+                    result = base.AddEntry(line);
                 }
             }
             catch (Exception ex)
@@ -99,6 +99,8 @@ namespace EDSync.EDSM
                 // todo
                 logger.Error("Error parsing line : " + line, ex);
             }
+
+            return result;
         }
 
 
@@ -106,8 +108,10 @@ namespace EDSync.EDSM
         ///  (see doc here : https://www.edsm.net/fr/api-journal-v1 )
         /// </summary>
         /// <param name="evt"></param>
-        private void UpdateGameStatus(JournalEvent evt)
+        private void UpdateGameStatus(string line)
         {
+
+            var evt = JsonConvert.DeserializeObject<JournalEvent>(line);
 
             DateTime date = DateTime.Parse(evt.Timestamp);
             if (date < _lastGameStatisDate)
@@ -222,11 +226,6 @@ namespace EDSync.EDSM
             return newdata;
         }
 
-        private bool IsDiscardedEvent(JournalEvent evt)
-        {
-            return IsDiscardedEvent(evt.EventName);
-        }
-
         private bool IsDiscardedEvent(string name)
         {
             if (name == null)
@@ -235,32 +234,6 @@ namespace EDSync.EDSM
             }
 
             return (DiscaredEvents.Contains(name));
-        }
-
-
-        private void customLog(string type, string message)
-        {
-            customLog(null, type, message);
-        }
-
-        private void customLog(JournalEvent evt, string type, string message)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (evt != null)
-            {
-                sb.Append(evt.Timestamp);
-                sb.Append(" - ");
-                sb.Append(evt.EventName.PadRight(25));
-            }
-            sb.Append(message);
-
-            logger.Info(sb.ToString());
-
-            if (NewSyncEvent != null)
-            {
-                NewSyncEvent(type, sb.ToString());
-            }
-
         }
 
 

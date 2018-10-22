@@ -59,6 +59,7 @@
     <Compile Include="Storage\IStorage.cs" />
     <Compile Include="Storage\MemoryStorage.cs" />
     <Compile Include="SyncEngine.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Watcher\JournalLogWatcher.cs" />
     <Compile Include="Watcher\IDirectoryListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -219,10 +219,11 @@ namespace EDSMDomain.Tests
 
             public string LastEntry { get; private set; }
 
-            public void AddEntry(string data)
+            public bool AddEntry(string data)
             {
                 this.Count++;
                 this.LastEntry = data;
+                return true;
             }
         }
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EDSMDomain.Api;
 using EDSMDomain.Models;
+using EDSMSynchro;
 using Newtonsoft.Json;
 
 namespace EDSync.EDSM
@@ -47,7 +48,22 @@ namespace EDSync.EDSM
 
             var value = taskResponseTask.Result;
 
-            var result = JsonConvert.DeserializeObject<JournalResponse>(value);
+            var res = JsonConvert.DeserializeObject<EDSMResponse>(value);
+
+            var result = new JournalResponse();
+
+            result.Message = res.msg;
+            result.MessageNumber = res.msgnum;
+            if (res.events != null)
+            {
+                foreach (var d in res.events)
+                {
+                    var more = new JournalResponse();
+                    more.Message = d.msg;
+                    more.MessageNumber = d.msgnum;
+                    result.Details.Add(more);
+                }
+            }
             return result;
         }
 
