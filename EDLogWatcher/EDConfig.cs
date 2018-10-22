@@ -59,6 +59,10 @@ namespace EDLogWatcher
                 {
                     string text = File.ReadAllText(CONFIG_FILE);
                     _data = JsonConvert.DeserializeObject<Dictionary<string, string>>(text);
+                    if (_data == null)
+                    {
+                        _data = new Dictionary<string, string>();
+                    }
                 }
                 else
                 {
