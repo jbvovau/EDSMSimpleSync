@@ -33,7 +33,7 @@ namespace EDSMDomain.Api
     
         #region API_JOURNAL_V1 method https://www.edsm.net/fr/api-journal-v1
 
-        public EDSMResponse PostJournalLine(string data)
+        public JournalResponse PostJournalLine(string data)
         {
             var values = new Dictionary<string, string>
             {
@@ -48,7 +48,7 @@ namespace EDSMDomain.Api
 
             var value = taskResponseTask.Result;
 
-            var result = JsonConvert.DeserializeObject<EDSMResponse>(value);
+            var result = JsonConvert.DeserializeObject<JournalResponse>(value);
             return result;
         }
 

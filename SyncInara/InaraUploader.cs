@@ -1,5 +1,4 @@
 ﻿using EDSMDomain.Api;
-using EDUploader;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,24 +8,16 @@ using System.Threading.Tasks;
 
 namespace SyncInara
 {
-    public class InaraUploader : AbstractUploader
+    public class InaraUploader 
     {
-        public InaraUploader(): base(new ApiInara())
+        public InaraUploader()
         {
 
         }
 
 
-        public override string SendJournal(string data)
+        public string SendJournal(string data)
         {
-            // test
-            var json = JsonConvert.DeserializeObject(data);
-            var list = new object[] { json };
-
-            data = JsonConvert.SerializeObject(list);
-
-            var result = this.Api.Post(ApiInara.API_JOURNAL, data);
-
             return null;
         }
     }

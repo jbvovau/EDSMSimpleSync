@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EDSMSync
+namespace EDSync.EDSM
 {
     public class GameStatus
     {

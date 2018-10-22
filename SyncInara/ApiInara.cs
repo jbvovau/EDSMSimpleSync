@@ -20,8 +20,6 @@ namespace EDSMDomain.Api
         {
             base.Configure(client);
 
-
-
             client.DefaultRequestHeaders.Add("appName", "EDSMSimpleSync");
             client.DefaultRequestHeaders.Add("appVersion", "0.0.2");
             client.DefaultRequestHeaders.Add("isDeveloped", "true");

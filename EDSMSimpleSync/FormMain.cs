@@ -1,7 +1,7 @@
 ﻿using EDLogWatcher;
 using EDSMDomain.Services;
 using EDSMSimpleSync.Utils;
-using EDSMSync;
+using EDUploader;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,11 +14,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EDLogWatcher.Watcher;
+using EDSMSimpleSync.Dev;
+using EDSync.EDSM;
 
 namespace EDSMSimpleSync
 {
     public partial class FormMain : Form
     {
+        // the main sync engine
+        private SyncEngine _syncEngine;
+
+        // parser for EDSM
         private EDSMEngine _edsmEngine;
 
         // private EDUploader.UploaderEngine _uploaderEngine;
@@ -63,36 +70,53 @@ namespace EDSMSimpleSync
             this.tbDirectory.Text = journal_log;
         }
 
-        private EDSMEngine buildEngine()
+        /// <summary>
+        /// Build new sync engine
+        /// </summary>
+        /// <returns></returns>
+        private SyncEngine buildEngine()
         {
+            // EDSM config
             var name = EDConfig.Instance.Get("name");
             var api_key = EDConfig.Instance.Get("api_key");
             var journal_log = EDConfig.Instance.Get("journal_log");
 
-            var engine = new EDSMEngine();
-            engine.ServiceJournal = new SerivceJournal(name, api_key);
-            engine.ServiceSystem = new CacheServiceSystem(new ServiceSystem(), new MemoryStorage());
-            engine.Directory = journal_log;
+            // build journal log watcher
+            var watcher = new JournalLogWatcher(journal_log);
+
+            // build sync engine with given log watcher
+            var engine = new SyncEngine(watcher);
+
+            // add entry manager for EDSM
+            this._edsmEngine = new EDSMEngine();
+            // _edsmEngine.ServiceJournal = new SerivceJournal(name, api_key);
+            _edsmEngine.ServiceJournal = new VoidServiceJournal();
+            _edsmEngine.ServiceSystem = new CacheServiceSystem(new ServiceSystem(), new MemoryStorage());
+            _edsmEngine.Configure();
+
+            engine.Add(_edsmEngine);
+
             return engine;
         }
 
         private bool testEDSMConnection()
         {
+            
             var result = this._edsmEngine.ServiceJournal.PostJournalEntry("TEST");
 
-            if (result == null || result.msgnum != 302)
+            if (result == null || result.MessageNumber != 302)
             {
-                _edsmEngine_NewSyncEvent("ERROR", result.msg);
+                _edsmEngine_NewSyncEvent("ERROR", result.Message);
                 return false;
             } else
             {
                 _edsmEngine_NewSyncEvent("SYNC", "EDSM Connection is OK");
             }
-
+            
             return true;
         }
 
-        #region listening events
+        #region listening Details
 
         private void startListen()
         {
@@ -103,9 +127,9 @@ namespace EDSMSimpleSync
         private void stopListen()
         {
             // trash old
-            if (this._edsmEngine != null)
+            if (this._syncEngine != null)
             {
-                this._edsmEngine.Dispose();
+                this._syncEngine.Dispose();
             }
 
             this.setStart(false);
@@ -117,18 +141,18 @@ namespace EDSMSimpleSync
         private void threadListen()
         {
             // trash old
-            if (this._edsmEngine != null)
+            if (this._syncEngine != null)
             {
-                this._edsmEngine.Dispose();
+                this._syncEngine.Dispose();
             }
 
             // build a new sync engine
-            this._edsmEngine = this.buildEngine();
+            this._syncEngine = this.buildEngine();
 
             // test folder
-            if (!Directory.Exists(this._edsmEngine.Directory))
+            if (!Directory.Exists(this._syncEngine.DirectoryListener.Directory))
             {
-                _edsmEngine_NewSyncEvent("ERROR", "Folder doesn't exist : " + _edsmEngine.Directory);
+                _edsmEngine_NewSyncEvent("ERROR", "Folder doesn't exist : " + _syncEngine.DirectoryListener.Directory);
                 return;
             }
 
@@ -140,14 +164,15 @@ namespace EDSMSimpleSync
 
             this.setStart(true);
 
-            // list to new sync events for displaying
-            this._edsmEngine.NewSyncEvent += _edsmEngine_NewSyncEvent;
+            // list to new sync Details for displaying
+            // this._edsmEngine.NewSyncEvent += _edsmEngine_NewSyncEvent;
 
             // load last date
-            _edsmEngine.LoadLastDate();
+            // _edsmEngine.LoadLastDate();
 
             // listen journa log directory
-            _edsmEngine.Listen();
+            _syncEngine.Listen();
+
             this._edsmEngine_NewSyncEvent("APP", "Start listenning");
 
             // dev
@@ -253,7 +278,7 @@ namespace EDSMSimpleSync
             this.Text += " - version " + version;
         }
 
-        #region UI events
+        #region UI Details
 
         private void btnSelectFolder_Click(object sender, EventArgs e)
         {

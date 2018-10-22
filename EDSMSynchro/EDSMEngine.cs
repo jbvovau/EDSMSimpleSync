@@ -1,5 +1,4 @@
 ﻿using EDLogWatcher;
-using EDLogWatcher.Engine;
 using EDSMDomain.Models;
 using EDSMDomain.Services;
 using log4net;
@@ -8,17 +7,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using EDLogWatcher.Parser;
+using EDLogWatcher.Watcher;
 
-namespace EDSMSync
+namespace EDSync.EDSM
 {
     /// <summary>
     /// Sync for EDSM Journal Log
     /// </summary>
-    public class EDSMEngine : IDisposable
+    public class EDSMEngine : IEntryManager
     {
         private const int MAX_PER_BATCH = 50;
 
-        // sync events
+        // sync Details
         public delegate void SyncEvent(string type, string message);
         public event SyncEvent NewSyncEvent;
 
@@ -27,8 +28,6 @@ namespace EDSMSync
         // logger
         private static ILog logger = LogManager.GetLogger(typeof(EDSMEngine));
 
-        // journal log directory listener
-        private LogWatcher _edlogs;
 
         // manage journal log by batch
         private SortedList<string, string> _sortedEvents;
@@ -59,10 +58,6 @@ namespace EDSMSync
 
         public IServiceSystem ServiceSystem { get; set; }
 
-        /// <summary>
-        /// Elite Dangerous Journal Log Directory
-        /// </summary>
-        public string Directory { get; set; }
 
         public IList<string> DiscaredEvents { get; private set; }
 
@@ -81,11 +76,6 @@ namespace EDSMSync
         public void Dispose()
         {
             _send = false;
-            if (_edlogs != null)
-            {
-                _edlogs.Dispose();
-                _edlogs = null;
-            }
         }
 
         public void LoadLastDate()
@@ -107,23 +97,15 @@ namespace EDSMSync
         }
 
 
-        public void Listen()
+        public void Configure()
         {
 
             _lastUpdate = DateTime.Now;
 
-            // load discarded events
+            // load discarded Details
             DiscaredEvents = ServiceJournal.GetDiscardedEvents();
 
             logger.Debug("Discarded Events loaded. Count : " + DiscaredEvents.Count);
-
-            // define new log parser
-            _edlogs = new LogWatcher();
-            _edlogs.NewJournalLogEntry += _edlogs_NewJournalLogEntry;
-            _edlogs.ListenDirectory(Directory);
-
-            // read all file to check
-            _edlogs.ReadAll();
 
             StartSender();
 
@@ -133,7 +115,7 @@ namespace EDSMSync
         /// New entry 
         /// </summary>
         /// <param name="line"></param>
-        private void _edlogs_NewJournalLogEntry(string line)
+        public void AddEntry(string line)
         {
             _lastUpdate = DateTime.Now;
 
@@ -171,14 +153,6 @@ namespace EDSMSync
             }
         }
 
-        /// <summary>
-        /// Start Synchro
-        /// </summary>
-        public void Listen(string path)
-        {
-            Directory = path;
-            Listen();
-        }
 
         #region EDSM sender
 
@@ -248,15 +222,15 @@ namespace EDSMSync
                     var result = ServiceJournal.PostJournalEntry(JsonConvert.SerializeObject(list));
 
                     // parse result
-                    if (result.msgnum == 100)
+                    if (result.MessageNumber == 100)
                     {
                         this.LastEventSync = DateTime.Parse(currentLastDate);
 
                         // batch result
-                        if (result.events != null && result.events.Length > 0)
+                        if (result.Details != null && result.Details.Length > 0)
                         {
                             int index = 0;
-                            foreach(var detail in result.events)
+                            foreach(var detail in result.Details)
                             {
                                 string whatWasSent = "";
                                 if (eventSent.Count > index)
@@ -264,25 +238,33 @@ namespace EDSMSync
                                     whatWasSent = eventSent[index];
                                 }
 
-                                var msg = whatWasSent + "[" + detail.msgnum + " - " + detail.msg + "]";
+                                var msg = whatWasSent + "[" + detail.MessageNumber + " - " + detail.Message + "]";
                                 customLog("SYNC", msg);
                                 index++;
                             }
                         }
 
+                        
                         SaveLastDate();
 
                         Thread.Sleep(1000);
                     }
+                    else
+                    {
+                        // error
+                        toRemove.Clear();
+                        Thread.Sleep(15000);
+                    }
                 }
                 else
                 {
+                    
                     _lastUpdate = DateTime.Now;
                     SaveLastDate();
                     Thread.Sleep(15000);
                 }
 
-                // remove pending events
+                // remove pending Details
                 lock (_sortedEvents)
                 {
                     foreach (var key in toRemove)

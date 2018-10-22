@@ -1,13 +1,13 @@
 ﻿using System;
 using EDSMDomain.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace EDSMDomain.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ServiceSystemTest
     {
-        [TestMethod]
+        [Test]
         public void TestTheTest()
         {
             var service = this.GetServiceSystem();
@@ -26,7 +26,7 @@ namespace EDSMDomain.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestCacheComplete()
         {
             var cached = new CacheServiceSystem(this.GetServiceSystem(), this.GetStorage());
@@ -39,7 +39,7 @@ namespace EDSMDomain.Tests
             Assert.IsNotNull(sys.CelestialBodies);
         }
 
-        [TestMethod]
+        [Test]
         public void TestThingAreCached()
         {
             var cached = new CacheServiceSystem(this.GetServiceSystem(), this.GetStorage());
