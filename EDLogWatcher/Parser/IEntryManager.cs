@@ -15,7 +15,7 @@ namespace EDLogWatcher.Parser
         /// <summary>
         /// Something to filter entry
         /// </summary>
-        IEntryFilter EntryFilter { get; set; }
+        IEntryFilter EntryFilter { get; }
 
         /// <summary>
         /// Add a new journal entry

@@ -111,7 +111,7 @@ namespace EDSMDomain.Tests
 
             Assert.IsFalse(filter2.Accepted(dataWTime1));
             Assert.IsFalse(filter2.Accepted(dataWTime2));
-            Assert.IsFalse(filter2.Accepted(dataWTime3));
+            Assert.IsTrue(filter2.Accepted(dataWTime3)); // warning : same time = ok
             Assert.IsFalse(filter2.Accepted(dataWTime4));
 
 

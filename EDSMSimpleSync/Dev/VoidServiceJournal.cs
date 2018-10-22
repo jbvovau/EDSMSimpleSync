@@ -18,6 +18,11 @@ namespace EDSMSimpleSync.Dev
             return new List<string>();
         }
 
+        public JournalResponse PostJournalEntry(IList<string> lines)
+        {
+            return PostJournalEntry("MULTI LINES");
+        }
+
         public JournalResponse PostJournalEntry(string data)
         {
             if (data == "TEST")

@@ -12,5 +12,7 @@ namespace EDSMDomain.Services
         IList<string> GetDiscardedEvents();
 
         JournalResponse PostJournalEntry(string data);
+
+        JournalResponse PostJournalEntry(IList<string> lines);
     }
 }

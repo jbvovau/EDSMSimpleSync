@@ -87,7 +87,6 @@ namespace EDSMDomain.Tests
             engine.Add(entryManager2);
             Assert.AreEqual(2, engine.Parsers.Count);
             Assert.AreEqual(2, engine.EntryManagers.Count);
-            Assert.AreEqual(2, entryParser.EntryManagers.Count);
 
             // send line
             Assert.AreEqual(0, entryManager.Count);

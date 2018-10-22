@@ -23,6 +23,11 @@ namespace EDSync.EDSM
             return Api.GetDiscardedEvents();
         }
 
+        public JournalResponse PostJournalEntry(IList<string> lines)
+        {
+            throw new NotImplementedException();
+        }
+
         public JournalResponse PostJournalEntry(string data)
         {
             return Api.PostJournalLine(data);

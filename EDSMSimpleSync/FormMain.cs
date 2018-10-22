@@ -22,6 +22,7 @@ using EDSync.EDSM;
 using EDSync.Services;
 using EDSync.Core.Storage;
 using SyncInara;
+using EDSync.Core.Parser;
 
 namespace EDSMSimpleSync
 {
@@ -360,8 +361,10 @@ namespace EDSMSimpleSync
 
         private EDSMEngine BuildEDSMJournal()
         {
+            var filter = new DateEntryFilter(_storage, "edsm");
+
             // add entry manager for EDSM
-            this._edsmEngine = new EDSMEngine();
+            this._edsmEngine = new EDSMEngine(filter);
 
             // EDSM config
             var customConfig = new CustomConfig(_storage, "edsm");
@@ -376,21 +379,24 @@ namespace EDSMSimpleSync
             // _edsmEngine.ServiceJournal = new SerivceJournal(api);
             _edsmEngine.ServiceJournal = new VoidServiceJournal();
             _edsmEngine.ServiceSystem = new CacheServiceSystem(new ServiceSystem(), new MemoryStorage());
-
-            var filter = new DateEntryFilter(_storage, "edsm");
-            _edsmEngine.EntryFilter = filter;
-
             _edsmEngine.Configure();
 
             return this._edsmEngine;
         }
 
-        private InaraEngine BuildInaraEngine()
+        private SyncPlugin BuildInaraEngine()
         {
-            var inara = new InaraEngine();
-
+            // define inara filter
             var filter = new DateEntryFilter(_storage, "inara");
-            inara.EntryFilter = filter;
+
+            // define inara service
+            IServiceJournal service = new ServiceInara();
+
+            // tmp
+            service = new VoidServiceJournal();
+
+            var inara = new SyncPlugin(filter);
+            inara.ServiceJournal = service;
 
             return inara;
         }
