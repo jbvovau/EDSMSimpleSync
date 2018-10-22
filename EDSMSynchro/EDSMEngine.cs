@@ -5,10 +5,13 @@ using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using EDLogWatcher.Parser;
 using EDLogWatcher.Watcher;
+using EDSync.Core;
+using EDSync.Core.Filter;
 
 namespace EDSync.EDSM
 {
@@ -41,9 +44,9 @@ namespace EDSync.EDSM
         private readonly string FIELD_LAST_DATE = "last_event_date";
 
         private GameStatus _gameStatus;
-        private DateTime _lastUpdate;
-        private DateTime _lastGameStatisDate;
 
+        private DateTime _lastGameStatisDate;
+        private DateTime _lastActivity;
         #endregion
 
         public EDSMEngine()
@@ -58,10 +61,9 @@ namespace EDSync.EDSM
 
         public IServiceSystem ServiceSystem { get; set; }
 
-
         public IList<string> DiscaredEvents { get; private set; }
 
-        public DateTime LastEventSync { get; set; }
+        public IEntryFilter EntryFilter { get; set; }
 
         public GameStatus Status
         {
@@ -78,29 +80,9 @@ namespace EDSync.EDSM
             _send = false;
         }
 
-        public void LoadLastDate()
-        {
-            string data = EDConfig.Instance.Get(FIELD_LAST_DATE);
-            if (data != null)
-            {
-                DateTime last;
-                if (DateTime.TryParse(data, out last))
-                {
-                    LastEventSync = last;
-                }
-            }
-        }
-
-        private void SaveLastDate()
-        {
-            EDConfig.Instance.Set(FIELD_LAST_DATE, LastEventSync.ToString());
-        }
-
 
         public void Configure()
         {
-
-            _lastUpdate = DateTime.Now;
 
             // load discarded Details
             DiscaredEvents = ServiceJournal.GetDiscardedEvents();
@@ -117,7 +99,7 @@ namespace EDSync.EDSM
         /// <param name="line"></param>
         public void AddEntry(string line)
         {
-            _lastUpdate = DateTime.Now;
+            _lastActivity = DateTime.Now;
 
             try
             {
@@ -131,18 +113,20 @@ namespace EDSync.EDSM
                 string key = evt.Timestamp + evt.EventName;
                 var date = DateTime.Parse(evt.Timestamp);
 
-                if (date > LastEventSync)
-                {
-                    // add game status to line
-                    line = AddGameStatusToJournalEntry(line);
+                // add game status to line
+                line = AddGameStatusToJournalEntry(line);
 
-                    if (line != null)
+                if (line != null)
+                {
+                    if (EntryFilter != null && !EntryFilter.Accepted(line))
                     {
-                        customLog(evt, "EVENT", "new event");
-                        lock (_sortedEvents)
-                        {
-                            _sortedEvents[key] = line;
-                        }
+                        return;
+                    }
+
+                    customLog(evt, "EVENT", "new event");
+                    lock (_sortedEvents)
+                    {
+                        _sortedEvents[key] = line;
                     }
                 }
             }
@@ -177,7 +161,7 @@ namespace EDSync.EDSM
         {
             while (_send)
             {
-                var inactivity = DateTime.Now.Subtract(_lastUpdate);
+                var inactivity = DateTime.Now.Subtract(_lastActivity);
                 if (inactivity < _inactivityToUpdate)
                 {
                     Thread.Sleep(1000);
@@ -199,6 +183,7 @@ namespace EDSync.EDSM
                         var key = _sortedEvents.Keys[i++];
 
                         var data = _sortedEvents[key];
+                        if (EntryFilter != null) EntryFilter.Discard(data);
                         var evt = JsonConvert.DeserializeObject<JournalEvent>(data);
                         currentLastDate = evt.Timestamp;
 
@@ -224,7 +209,7 @@ namespace EDSync.EDSM
                     // parse result
                     if (result.MessageNumber == 100)
                     {
-                        this.LastEventSync = DateTime.Parse(currentLastDate);
+                        if (this.EntryFilter != null) EntryFilter.Confirm();
 
                         // batch result
                         if (result.Details != null && result.Details.Length > 0)
@@ -244,9 +229,7 @@ namespace EDSync.EDSM
                             }
                         }
 
-                        
-                        SaveLastDate();
-
+                      
                         Thread.Sleep(1000);
                     }
                     else
@@ -258,9 +241,7 @@ namespace EDSync.EDSM
                 }
                 else
                 {
-                    
-                    _lastUpdate = DateTime.Now;
-                    SaveLastDate();
+                   
                     Thread.Sleep(15000);
                 }
 

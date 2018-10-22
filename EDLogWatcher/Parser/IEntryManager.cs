@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EDSync.Core.Filter;
 
 namespace EDLogWatcher.Parser
 {
@@ -11,7 +12,15 @@ namespace EDLogWatcher.Parser
     /// </summary>
     public interface IEntryManager
     {
+        /// <summary>
+        /// Something to filter entry
+        /// </summary>
+        IEntryFilter EntryFilter { get; set; }
 
+        /// <summary>
+        /// Add a new journal entry
+        /// </summary>
+        /// <param name="data"></param>
         void AddEntry(string data);
     }
 }

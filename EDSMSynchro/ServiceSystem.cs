@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using EDSMDomain.Api;
 using EDSMDomain.Models;
+using EDSMDomain.Services;
 using Newtonsoft.Json;
 
-namespace EDSMDomain.Services
+namespace EDSync.EDSM
 {
     public class ServiceSystem : IServiceSystem
     {

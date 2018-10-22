@@ -29,6 +29,11 @@ namespace EDLogWatcher.Watcher
         void Listen();
 
         /// <summary>
+        /// Stop listening
+        /// </summary>
+        void Stop();
+
+        /// <summary>
         /// Mark all the files as "modified" to force the parsing
         /// </summary>
         void ReadAll();

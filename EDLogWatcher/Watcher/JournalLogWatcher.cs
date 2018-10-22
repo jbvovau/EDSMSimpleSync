@@ -61,10 +61,7 @@ namespace EDLogWatcher.Watcher
 
         public void Dispose()
         {
-            this._run = false;
-            this._watcher.EnableRaisingEvents = false;
-            this._watcher.Dispose();
-            this.StopQueue();
+            this.Stop();
         }
 
         /// <summary>
@@ -84,6 +81,14 @@ namespace EDLogWatcher.Watcher
             _watcher.EnableRaisingEvents = true;
 
             startThreads();
+        }
+
+        public void Stop()
+        {
+            this._run = false;
+            this._watcher.EnableRaisingEvents = false;
+            this._watcher.Dispose();
+            this.StopQueue();
         }
 
         /// <summary>

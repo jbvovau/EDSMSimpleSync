@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using EDSMDomain.Api;
 using EDSMDomain.Models;
 using Newtonsoft.Json;
 
-namespace EDSMDomain.Api
+namespace EDSync.EDSM
 {
     public class ApiEDSM : RestApi
     {

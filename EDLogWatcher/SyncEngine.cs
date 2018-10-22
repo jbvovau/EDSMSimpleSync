@@ -17,7 +17,6 @@ namespace EDUploader
         {
             this.DirectoryListener = directoryListener;
             this.EntryManagers = new List<IEntryManager>();
-
         }
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace EDUploader
 
         public void Stop()
         {
-
+            this.DirectoryListener.Stop();
         }
 
         private void build()

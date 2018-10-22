@@ -14,8 +14,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EDLogWatcher.Filter;
 using EDLogWatcher.Watcher;
 using EDSMSimpleSync.Dev;
+using EDSync.Core;
 using EDSync.EDSM;
 
 namespace EDSMSimpleSync
@@ -49,8 +51,7 @@ namespace EDSMSimpleSync
         private void fillConfig()
         {
             // get edsm sample config
-            var name = EDConfig.Instance.Get("name");
-            var api_key = EDConfig.Instance.Get("api_key");
+            var customConfig = new CustomConfig("edsm");
             var journal_log = EDConfig.Instance.Get("journal_log");
 
             if (journal_log == null)
@@ -65,8 +66,8 @@ namespace EDSMSimpleSync
             DateTime.TryParse(EDConfig.Instance.Get("last_event_date"), out lastEvent);
             EDConfig.Instance.Set("last_event_date", lastEvent.ToString());
 
-            this.tbApiKey.Text = api_key;
-            this.tbCmdr.Text = name;
+            this.tbApiKey.Text = customConfig.ApiKey;
+            this.tbCmdr.Text = customConfig.CommanderName;
             this.tbDirectory.Text = journal_log;
         }
 
@@ -76,9 +77,6 @@ namespace EDSMSimpleSync
         /// <returns></returns>
         private SyncEngine buildEngine()
         {
-            // EDSM config
-            var name = EDConfig.Instance.Get("name");
-            var api_key = EDConfig.Instance.Get("api_key");
             var journal_log = EDConfig.Instance.Get("journal_log");
 
             // build journal log watcher
@@ -87,14 +85,8 @@ namespace EDSMSimpleSync
             // build sync engine with given log watcher
             var engine = new SyncEngine(watcher);
 
-            // add entry manager for EDSM
-            this._edsmEngine = new EDSMEngine();
-            // _edsmEngine.ServiceJournal = new SerivceJournal(name, api_key);
-            _edsmEngine.ServiceJournal = new VoidServiceJournal();
-            _edsmEngine.ServiceSystem = new CacheServiceSystem(new ServiceSystem(), new MemoryStorage());
-            _edsmEngine.Configure();
-
-            engine.Add(_edsmEngine);
+            // listen EDSM
+            engine.Add(this.BuildEDSMJournal());
 
             return engine;
         }
@@ -320,8 +312,11 @@ namespace EDSMSimpleSync
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            EDConfig.Instance.Set("name", this.tbCmdr.Text);
-            EDConfig.Instance.Set("api_key", this.tbApiKey.Text);
+            var customConfig = new CustomConfig("edsm");
+
+            customConfig.CommanderName = this.tbCmdr.Text;
+            customConfig.ApiKey = this.tbApiKey.Text;
+
             EDConfig.Instance.Set("journal_log", this.tbDirectory.Text);
 
 
@@ -343,6 +338,37 @@ namespace EDSMSimpleSync
             var status = this._edsmEngine.Status;
             this.tbCurrentSystem.Text = status.System;
             this.tbCurrentStation.Text = status.Station;
+        }
+
+        #endregion
+
+        #region configure EDSM
+
+        private EDSMEngine BuildEDSMJournal()
+        {
+            // add entry manager for EDSM
+            this._edsmEngine = new EDSMEngine();
+
+            // EDSM config
+            var customConfig = new CustomConfig("edsm");
+
+            // api
+            var api = new ApiEDSM();
+            api.ApiKey = customConfig.ApiKey;
+            api.CommanderName = customConfig.CommanderName;
+            api.FromSoftwareVersion = _appVersion;
+            api.FromSoftware = "EliteSimpleSync";
+
+            // _edsmEngine.ServiceJournal = new SerivceJournal(api);
+            _edsmEngine.ServiceJournal = new VoidServiceJournal();
+            _edsmEngine.ServiceSystem = new CacheServiceSystem(new ServiceSystem(), new MemoryStorage());
+
+            var filter = new DateEntryFilter("edsm");
+            _edsmEngine.EntryFilter = filter;
+
+            _edsmEngine.Configure();
+
+            return this._edsmEngine;
         }
 
         #endregion

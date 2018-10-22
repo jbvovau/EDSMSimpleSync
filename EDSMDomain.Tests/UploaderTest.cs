@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EDLogWatcher;
 using EDLogWatcher.Parser;
 using EDLogWatcher.Watcher;
+using EDSync.Core.Filter;
 using EDUploader;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -154,6 +155,11 @@ namespace EDSMDomain.Tests
             {
             }
 
+            public void Stop()
+            {
+
+            }
+
             public void ReadAll()
             {
                 foreach (var p in this.Parsers)
@@ -193,7 +199,7 @@ namespace EDSMDomain.Tests
                 {
                     entryManager.AddEntry("001");
                     entryManager.AddEntry("002");
-                    entryManager.AddEntry("03");
+                    entryManager.AddEntry("003");
                 }
 
                 return true;
@@ -206,6 +212,8 @@ namespace EDSMDomain.Tests
             {
                 this.Count = 0;
             }
+
+            public IEntryFilter EntryFilter { get; set; }
 
             public int Count { get; private set; }
 

@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace EDLogWatcher
+namespace EDSync.Core
 {
     /// <summary>
     /// Configuration for this file

@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EDConfig.cs" />
+    <Compile Include="Filter\DateEntryFilter.cs" />
+    <Compile Include="Filter\IEntryFilter.cs" />
     <Compile Include="Parser\IEntryManager.cs" />
     <Compile Include="Parser\IEntryParser.cs" />
     <Compile Include="Parser\IFileParser.cs" />

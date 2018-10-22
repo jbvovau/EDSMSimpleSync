@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\ApiEDSM.cs" />
     <Compile Include="Api\RestApi.cs" />
     <Compile Include="Models\BankAccount.cs" />
     <Compile Include="Models\CelestialBody.cs" />
@@ -58,7 +57,6 @@
     <Compile Include="Services\IServiceJournal.cs" />
     <Compile Include="Services\IServiceSystem.cs" />
     <Compile Include="Services\IStorage.cs" />
-    <Compile Include="Services\ServiceSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -11,27 +11,21 @@ namespace EDSync.EDSM
 {
     public class SerivceJournal : IServiceJournal
     {
-
-        private ApiEDSM _api;
-        private string _apiKey;
-
-        public SerivceJournal(string name, string apiKey)
+        public SerivceJournal(ApiEDSM api)
         {
-            _api = new ApiEDSM();
-            _api.CommanderName = name;
-            _api.ApiKey = apiKey;
-            _api.FromSoftware = "EDSMSimpleSync";
-            _api.FromSoftwareVersion = "0.0.1"; //TODO lol
+            this.Api = api;
         }
+
+        public ApiEDSM Api { get; private set; }
 
         public IList<string> GetDiscardedEvents()
         {
-            return _api.GetDiscardedEvents();
+            return Api.GetDiscardedEvents();
         }
 
         public JournalResponse PostJournalEntry(string data)
         {
-            return _api.PostJournalLine(data);
+            return Api.PostJournalLine(data);
         }
     }
 }
