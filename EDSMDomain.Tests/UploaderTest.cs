@@ -25,15 +25,15 @@ namespace EDSMDomain.Tests
         [Test]
         public void SimpleDirectoryAndParser()
         {
+            const string dir = "_DIR_";
+
             var fileParser = this.CreateFileParser();
-            var dirListener = this.CreateDirectoryListener();
+            var dirListener = this.CreateDirectoryListener(dir);
 
             dirListener.Add(fileParser);
 
             Assert.NotNull(dirListener.Parsers);
             Assert.AreEqual(1, dirListener.Parsers.Count);
-
-            const string dir = "_DIR_";
 
             dirListener.Listen();
             Assert.AreEqual(dir, dirListener.Directory);
@@ -50,8 +50,9 @@ namespace EDSMDomain.Tests
         [Test]
         public void SyncEngineTest()
         {
+            const string dir = "___DIRE_______";
             // create dir listener
-            DumbDirectoryListener dirListener = this.CreateDirectoryListener();
+            DumbDirectoryListener dirListener = this.CreateDirectoryListener(dir);
             var engine = new SyncEngine(dirListener);
 
             Assert.NotNull(engine.DirectoryListener);
@@ -108,9 +109,9 @@ namespace EDSMDomain.Tests
             return new DumbFileParser();
         }
 
-        private DumbDirectoryListener CreateDirectoryListener()
+        private DumbDirectoryListener CreateDirectoryListener(string dir)
         {
-            return new DumbDirectoryListener("__SYNC__");
+            return new DumbDirectoryListener(dir);
         }
 
         #region mocks class

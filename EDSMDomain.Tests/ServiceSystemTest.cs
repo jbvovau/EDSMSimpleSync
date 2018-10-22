@@ -1,5 +1,8 @@
 ﻿using System;
 using EDSMDomain.Services;
+using EDSMSimpleSync.Utils;
+using EDSync.Core.Storage;
+using EDSync.Services;
 using NUnit.Framework;
 
 namespace EDSMDomain.Tests

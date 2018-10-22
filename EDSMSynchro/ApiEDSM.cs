@@ -30,8 +30,6 @@ namespace EDSync.EDSM
 
         #endregion
 
-
-    
         #region API_JOURNAL_V1 method https://www.edsm.net/fr/api-journal-v1
 
         public JournalResponse PostJournalLine(string data)

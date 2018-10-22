@@ -19,6 +19,9 @@ using EDLogWatcher.Watcher;
 using EDSMSimpleSync.Dev;
 using EDSync.Core;
 using EDSync.EDSM;
+using EDSync.Services;
+using EDSync.Core.Storage;
+using SyncInara;
 
 namespace EDSMSimpleSync
 {
@@ -36,6 +39,10 @@ namespace EDSMSimpleSync
 
         private string _appVersion = "";
 
+        private const string CONFIG_FILE = "edconfig.json";
+
+        private IStorage _storage;
+
         public FormMain()
         {
             InitializeComponent();
@@ -50,8 +57,12 @@ namespace EDSMSimpleSync
 
         private void fillConfig()
         {
+            // define storage
+            this._storage = new FileStorage(CONFIG_FILE);
+            EDConfig.Instance.Storage = this._storage;
+
             // get edsm sample config
-            var customConfig = new CustomConfig("edsm");
+            var customConfig = new CustomConfig(_storage, "edsm");
             var journal_log = EDConfig.Instance.Get("journal_log");
 
             if (journal_log == null)
@@ -87,6 +98,9 @@ namespace EDSMSimpleSync
 
             // listen EDSM
             engine.Add(this.BuildEDSMJournal());
+
+            // listen Inara
+            engine.Add(this.BuildInaraEngine());
 
             return engine;
         }
@@ -312,7 +326,7 @@ namespace EDSMSimpleSync
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            var customConfig = new CustomConfig("edsm");
+            var customConfig = new CustomConfig(_storage, "edsm");
 
             customConfig.CommanderName = this.tbCmdr.Text;
             customConfig.ApiKey = this.tbApiKey.Text;
@@ -350,7 +364,7 @@ namespace EDSMSimpleSync
             this._edsmEngine = new EDSMEngine();
 
             // EDSM config
-            var customConfig = new CustomConfig("edsm");
+            var customConfig = new CustomConfig(_storage, "edsm");
 
             // api
             var api = new ApiEDSM();
@@ -363,12 +377,22 @@ namespace EDSMSimpleSync
             _edsmEngine.ServiceJournal = new VoidServiceJournal();
             _edsmEngine.ServiceSystem = new CacheServiceSystem(new ServiceSystem(), new MemoryStorage());
 
-            var filter = new DateEntryFilter("edsm");
+            var filter = new DateEntryFilter(_storage, "edsm");
             _edsmEngine.EntryFilter = filter;
 
             _edsmEngine.Configure();
 
             return this._edsmEngine;
+        }
+
+        private InaraEngine BuildInaraEngine()
+        {
+            var inara = new InaraEngine();
+
+            var filter = new DateEntryFilter(_storage, "inara");
+            inara.EntryFilter = filter;
+
+            return inara;
         }
 
         #endregion

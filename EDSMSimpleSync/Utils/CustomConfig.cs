@@ -4,15 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EDSync.Core;
+using EDSync.Core.Storage;
 
 namespace EDSMSimpleSync.Utils
 {
     class CustomConfig
     {
-        public CustomConfig(string name)
+        public CustomConfig(IStorage storage, string name)
         {
+            this.Storage = storage;
             this.ConfigName = name;
         }
+
+        public IStorage Storage { get; set; }
 
         public string ConfigName { get; private set; }
 

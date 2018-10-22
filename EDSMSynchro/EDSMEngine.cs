@@ -174,7 +174,6 @@ namespace EDSync.EDSM
                 var eventSent = new List<string>();
                 var toRemove = new List<string>();
                 int i = 0;
-                string currentLastDate = null;
 
                 lock (_sortedEvents)
                 {
@@ -185,7 +184,6 @@ namespace EDSync.EDSM
                         var data = _sortedEvents[key];
                         if (EntryFilter != null) EntryFilter.Discard(data);
                         var evt = JsonConvert.DeserializeObject<JournalEvent>(data);
-                        currentLastDate = evt.Timestamp;
 
                         if (IsDiscardedEvent(evt))
                         {

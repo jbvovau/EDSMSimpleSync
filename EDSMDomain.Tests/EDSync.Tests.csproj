@@ -49,8 +49,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigTest.cs" />
     <Compile Include="DumbSystemService.cs" />
-    <Compile Include="MemoryStorage.cs" />
     <Compile Include="ServiceSystemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UploaderTest.cs" />
@@ -63,6 +63,10 @@
     <ProjectReference Include="..\EDSMDomain\EDSync.Domain.csproj">
       <Project>{68ab7525-ca08-4266-b735-3be617c2da19}</Project>
       <Name>EDSync.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDSMSimpleSync\EDSync.GUI.csproj">
+      <Project>{739888ee-ea2d-4031-a32c-cbb1b3978e95}</Project>
+      <Name>EDSync.GUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\EDSMSynchro\EDSync.EDSM.csproj">
       <Project>{9eb0e63c-b6e9-4d73-99b9-223d4a200e15}</Project>

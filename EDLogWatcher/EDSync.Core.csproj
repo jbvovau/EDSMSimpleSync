@@ -7,8 +7,8 @@
     <ProjectGuid>{14EBFB33-0CCA-496D-A26C-C684F2F93DC4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EDLogWatcher</RootNamespace>
-    <AssemblyName>EDLogWatcher</AssemblyName>
+    <RootNamespace>EDSync.Core</RootNamespace>
+    <AssemblyName>EDSync.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -54,6 +54,9 @@
     <Compile Include="Parser\IEntryParser.cs" />
     <Compile Include="Parser\IFileParser.cs" />
     <Compile Include="Parser\JournalLogParser.cs" />
+    <Compile Include="Storage\FileStorage.cs" />
+    <Compile Include="Storage\IStorage.cs" />
+    <Compile Include="Storage\MemoryStorage.cs" />
     <Compile Include="SyncEngine.cs" />
     <Compile Include="Watcher\JournalLogWatcher.cs" />
     <Compile Include="Watcher\IDirectoryListener.cs" />

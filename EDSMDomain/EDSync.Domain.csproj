@@ -53,10 +53,8 @@
     <Compile Include="Models\JournalEvent.cs" />
     <Compile Include="Models\Station.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\CacheServiceSystem.cs" />
     <Compile Include="Services\IServiceJournal.cs" />
     <Compile Include="Services\IServiceSystem.cs" />
-    <Compile Include="Services\IStorage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
