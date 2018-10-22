@@ -23,6 +23,7 @@ using EDSync.Services;
 using EDSync.Core.Storage;
 using SyncInara;
 using EDSync.Core.Parser;
+using EDSMDomain.Api;
 
 namespace EDSMSimpleSync
 {
@@ -96,7 +97,7 @@ namespace EDSMSimpleSync
             engine.Add(this.BuildEDSMJournal());
 
             // listen Inara
-            engine.Add(this.BuildInaraEngine());
+            // engine.Add(this.BuildInaraEngine());
 
             return engine;
         }
@@ -255,30 +256,7 @@ namespace EDSMSimpleSync
             return;
         }
 
-        /// <summary>
-        /// For new version
-        /// </summary>
-        /*
-        private void startUploader()
-        {
-            return;
-            // for new version
-            this._uploaderEngine = new EDUploader.UploaderEngine();
 
-            // Inara
-            IUploader inara = new InaraUploader();
-            inara.Api.CommanderName = "";
-            inara.Api.ApiKey = "";
-            inara.Api.FromSoftware = "EDSMSimpleSync";
-            inara.Api.FromSoftwareVersion = this._appVersion;
-
-            // edsm
-
-            this._uploaderEngine.Add(inara);
-
-            this._uploaderEngine.Listen(_edsmEngine.Directory);
-        }
-        */
         #endregion
 
         private void initLog()
@@ -396,10 +374,19 @@ namespace EDSMSimpleSync
             // define inara filter
             var filter = new DateEntryFilter(_storage, "inara");
 
-            // define inara service
-            IServiceJournal service = new ServiceInara();
+            var customConfig = new CustomConfig(_storage, "inara");
 
-            // tmp
+            // inara API
+            var api = new ApiInara();
+            api.ApiKey = customConfig.ApiKey;
+            api.CommanderName = customConfig.CommanderName;
+            api.FromSoftwareVersion = _appVersion;
+            api.FromSoftware = "EliteSimpleSync";
+
+            // define inara service
+            IServiceJournal service = new ServiceInara(api);
+
+            // debug
             service = new VoidServiceJournal();
 
             var inara = new SyncPlugin(filter, "Inara");
