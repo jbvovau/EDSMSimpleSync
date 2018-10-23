@@ -27,7 +27,9 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+packages
 
 # Visual Studio 2015
 .vs/
 Start/edsm_config\.json
+
