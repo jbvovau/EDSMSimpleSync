@@ -1,4 +1,4 @@
-﻿using EDSMDomain.Models;
+﻿using EDSMDomain.Api;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using EDSMDomain.Api;
 
 namespace EDSync.Inara.Api
 {
@@ -30,21 +29,36 @@ namespace EDSync.Inara.Api
         /// <returns></returns>
         public InaraResponse Commit()
         {
-            var result = this.PostEvents(this._events);
-            
-            var r = buildResponse(result);
+            int index = 0;
 
-            if (_request != null)
+            InaraResponse result = new InaraResponse();
+
+            while (index < this._events.Count)
             {
-                foreach (var inaraResponseEvent in r.Events)
+                var list = new List<InaraEvent>();
+
+                while (list.Count < 20 && index < _events.Count)
                 {
-                    _request.SetCustomResponse(inaraResponseEvent.CustomID, inaraResponseEvent.eventStatus);
+                    list.Add(_events[index++]);
                 }
+
+                var posted = this.PostEvents(list);
+
+                result = buildResponse(posted);
+
+                if (_request != null)
+                {
+                    foreach (var inaraResponseEvent in result.Events)
+                    {
+                        _request.SetCustomResponse(inaraResponseEvent.CustomID, inaraResponseEvent.eventStatus);
+                    }
+                }
+
             }
 
             this._events.Clear();
 
-            return r;
+            return result;
         }
 
         /// <summary>
@@ -112,6 +126,27 @@ namespace EDSync.Inara.Api
             evt.Timestamp = timestamp;
             evt.AddData("majorfactionName", majorfactionName);
             evt.AddData("majorfactionReputation", reputation);
+
+            this.Add(evt);
+        }
+
+        /// <summary>
+        /// Add Jump travel
+        /// </summary>
+        /// <param name="timestamp"></param>
+        /// <param name="starsystemName"></param>
+        /// <param name="jumpDistance"></param>
+        /// <param name="shipType"></param>
+        /// <param name="shipGameID"></param>
+        public void AddCommanderTravelFSDJump(string timestamp, string starsystemName, float jumpDistance,
+            string shipType, int shipGameID)
+        {
+            var evt = new InaraEvent("addCommanderTravelFSDJump");
+            evt.Timestamp = timestamp;
+            evt.AddData("starsystemName", starsystemName);
+            evt.AddData("jumpDistance", jumpDistance);
+            if (!string.IsNullOrEmpty(shipType)) evt.AddData("shipType", shipType);
+            if (shipGameID > 0) evt.AddData("shipGameID", shipGameID);
 
             this.Add(evt);
         }

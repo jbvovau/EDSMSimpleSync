@@ -1,15 +1,9 @@
-﻿using EDSMDomain.Api;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using EDSMDomain.Models;
 using EDSMDomain.Services;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EDSync.Core;
 using EDSync.Inara.Api;
-using Microsoft.SqlServer.Server;
 
 namespace EDSync.Inara
 {
@@ -141,6 +135,9 @@ namespace EDSync.Inara
                 case "Reputation":
                     message = manageReputation(line);
                     break;
+                case "FSDJump":
+                    message = manageFSDJump(line);
+                    break;
             }
 
             if (message != no_message)
@@ -200,6 +197,20 @@ namespace EDSync.Inara
             this.Status.ReputationFederation = json.Federation;
 
             return "Reputation updated";
+        }
+
+        private string manageFSDJump(string line)
+        {
+            dynamic json = JsonConvert.DeserializeObject(line);
+
+            string timestamp = json.timestamp;
+            float jumpdist = (float) json.JumpDist;
+            string starsystem = json.StarSystem;
+
+
+            Api.AddCommanderTravelFSDJump(timestamp, starsystem, jumpdist, "", 0);
+
+            return null;
         }
 
         #endregion

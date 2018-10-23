@@ -228,7 +228,7 @@ namespace EDUploader
             {
                 if (!this._paused) { 
                     this.Send(40);
-                    Thread.Sleep(20);
+                    Thread.Sleep(500);
                 } else
                 {
                     Thread.Sleep(10000);

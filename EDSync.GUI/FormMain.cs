@@ -1,30 +1,21 @@
-﻿using EDLogWatcher;
-using EDSMDomain.Services;
-using EDSMSimpleSync.Utils;
-using EDUploader;
+﻿using EDSMSimpleSync.Utils;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using EDLogWatcher.Filter;
 using EDLogWatcher.Watcher;
-using EDSMSimpleSync.Dev;
+using EDSMDomain.Services;
 using EDSync.Core;
-using EDSync.EDSM;
-using EDSync.Services;
 using EDSync.Core.Storage;
-using EDSMDomain.Api;
+using EDSync.EDSM;
 using EDSync.Inara;
 using EDSync.Inara.Api;
+using EDSync.Services;
+using EDUploader;
 
 namespace EDSMSimpleSync
 {

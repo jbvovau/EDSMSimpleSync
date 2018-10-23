@@ -1,16 +1,10 @@
-﻿using EDLogWatcher;
-using EDSMDomain.Models;
-using EDSMDomain.Services;
+﻿using EDSync.Core;
 using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using EDLogWatcher.Parser;
-using EDLogWatcher.Watcher;
-using EDSync.Core;
+using EDSMDomain.Models;
+using EDSMDomain.Services;
 using EDSync.Core.Filter;
 
 namespace EDSync.EDSM
