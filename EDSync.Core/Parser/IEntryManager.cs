@@ -12,6 +12,8 @@ namespace EDLogWatcher.Parser
     /// </summary>
     public interface IEntryManager
     {
+        bool Enabled { get; }
+
         /// <summary>
         /// Something to filter entry
         /// </summary>

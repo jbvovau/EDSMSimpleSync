@@ -13,6 +13,17 @@ namespace EDSMSimpleSync.Dev
     /// </summary>
     class VoidServiceJournal : IServiceJournal
     {
+
+        public bool IsEventDiscarded(string name)
+        {
+            return false;
+        }
+
+        public JournalResponse TestConnection()
+        {
+            return null;
+        }
+
         public IList<string> GetDiscardedEvents()
         {
             return new List<string>();

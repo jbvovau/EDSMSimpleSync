@@ -24,12 +24,13 @@ namespace EDSync.Inara.Api
         [JsonProperty(PropertyName = "events")]
         public IList<InaraEvent> Events;
 
-        public void SetCustomResponse(long customId, int status)
+        public void SetCustomResponse(long customId, int status, string text)
         {
             var evt = this.Events.FirstOrDefault(e => e.CustomID == customId);
             if (evt != null)
             {
                 evt.Result = status;
+                evt.ResultText = text;
             }
         }
 
@@ -75,7 +76,11 @@ namespace EDSync.Inara.Api
         [JsonProperty(PropertyName = "eventCustomID")]
         public long CustomID { get; set; }
 
+        [JsonIgnore]
         public int Result { get; set; }
+
+        [JsonIgnore]
+        public string ResultText { get; set; }
 
         /// <summary>
         /// Add custom data
@@ -100,7 +105,10 @@ namespace EDSync.Inara.Api
     public class InaraResponseEvent
     {
         [JsonProperty(PropertyName = "eventStatus")]
-        public int eventStatus;
+        public int Code;
+
+        [JsonProperty(PropertyName = "eventStatusText")]
+        public string Text;
 
         [JsonProperty(PropertyName = "eventCustomID")]
         public long CustomID;

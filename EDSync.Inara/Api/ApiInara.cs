@@ -46,19 +46,31 @@ namespace EDSync.Inara.Api
 
                 result = buildResponse(posted);
 
-                if (_request != null)
+                if (_request != null && result.Events != null)
                 {
                     foreach (var inaraResponseEvent in result.Events)
                     {
-                        _request.SetCustomResponse(inaraResponseEvent.CustomID, inaraResponseEvent.eventStatus);
+                        _request.SetCustomResponse(inaraResponseEvent.CustomID, inaraResponseEvent.Code, inaraResponseEvent.Text);
                     }
                 }
-
+                System.Threading.Thread.Sleep(1000);
             }
 
             this._events.Clear();
 
             return result;
+        }
+
+
+        public InaraResponse GetCommanderProfile(string name)
+        {
+            var evt = new InaraEvent("getCommanderProfile");
+            evt.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ssZ");
+            evt.AddData("searchName", name);
+
+            this.Add(evt);
+
+            return this.Commit();
         }
 
         /// <summary>

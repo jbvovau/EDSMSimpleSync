@@ -54,13 +54,11 @@ namespace EDSMSimpleSync
             // version
             this._appVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-
             // define storage
             this._storage = new FileStorage(CONFIG_FILE);
             EDConfig.Instance.Storage = this._storage;
 
-            // get edsm sample config
-            var customConfig = new CustomConfig(_storage, "edsm");
+
             var journal_log = EDConfig.Instance.Get("journal_log");
 
             if (journal_log == null)
@@ -70,8 +68,15 @@ namespace EDSMSimpleSync
                 EDConfig.Instance.Set("journal_log", journal_log);
             }
 
+            // get edsm sample config
+            var customConfig = new CustomConfig(_storage, "edsm");
+            var configInara = new CustomConfig(_storage, "inara");
+
             this.tbApiKey.Text = customConfig.ApiKey;
             this.tbCmdr.Text = customConfig.CommanderName;
+            this.tbInaraCmdr.Text = configInara.CommanderName;
+            this.tbInaraApiKey.Text = configInara.ApiKey;
+
             this.tbDirectory.Text = journal_log;
         }
 
@@ -81,6 +86,9 @@ namespace EDSMSimpleSync
         /// <returns></returns>
         private SyncEngine buildEngine()
         {
+            // fetch config in UI
+            this.fetchConfiguration();
+
             var journal_log = EDConfig.Instance.Get("journal_log");
 
             // build journal log watcher
@@ -96,23 +104,6 @@ namespace EDSMSimpleSync
             engine.Add(this.BuildInaraEngine());
 
             return engine;
-        }
-
-        private bool testEDSMConnection()
-        {
-            
-            var result = this._edsmEngine.ServiceJournal.PostJournalEntry("TEST");
-
-            if (result == null || result.MessageNumber != 302)
-            {
-                _edsmEngine_NewSyncEvent("ERROR", result.Message);
-                return false;
-            } else
-            {
-                _edsmEngine_NewSyncEvent("SYNC", "EDSM Connection is OK");
-            }
-            
-            return true;
         }
 
         #region listening Details
@@ -155,12 +146,6 @@ namespace EDSMSimpleSync
             if (!Directory.Exists(this._syncEngine.DirectoryListener.Directory))
             {
                 _edsmEngine_NewSyncEvent("ERROR", "Folder doesn't exist : " + _syncEngine.DirectoryListener.Directory);
-                return;
-            }
-
-            // test edsm connection
-            if (!this.testEDSMConnection())
-            {
                 return;
             }
 
@@ -260,6 +245,22 @@ namespace EDSMSimpleSync
             this.Text += " - version " + version;
         }
 
+        private void fetchConfiguration()
+        {
+            var customConfig = new CustomConfig(_storage, "edsm");
+
+            customConfig.CommanderName = this.tbCmdr.Text;
+            customConfig.ApiKey = this.tbApiKey.Text;
+
+            var configInara = new CustomConfig(_storage, "inara");
+            configInara.CommanderName = this.tbInaraCmdr.Text;
+            configInara.ApiKey = this.tbInaraApiKey.Text;
+
+            EDConfig.Instance.Set("journal_log", this.tbDirectory.Text);
+
+            customConfig.Storage.Save();
+        }
+
         #region UI Details
 
         private void btnSelectFolder_Click(object sender, EventArgs e)
@@ -278,7 +279,6 @@ namespace EDSMSimpleSync
             
         }
 
-
         private void setStart(bool started)
         {
             this.Invoke((MethodInvoker)delegate
@@ -288,6 +288,8 @@ namespace EDSMSimpleSync
 
                 this.tbCmdr.Enabled = !started;
                 this.tbApiKey.Enabled = !started;
+                this.tbInaraCmdr.Enabled = !started;
+                this.tbInaraApiKey.Enabled = !started;
                 this.tbDirectory.Enabled = !started;
                 this.btnSelectFolder.Enabled = !started;
             });
@@ -302,13 +304,8 @@ namespace EDSMSimpleSync
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            var customConfig = new CustomConfig(_storage, "edsm");
 
-            customConfig.CommanderName = this.tbCmdr.Text;
-            customConfig.ApiKey = this.tbApiKey.Text;
-
-            EDConfig.Instance.Set("journal_log", this.tbDirectory.Text);
-
+            this.fetchConfiguration();
 
             this.startListen();
         }
@@ -340,6 +337,8 @@ namespace EDSMSimpleSync
 
             // add entry manager for EDSM
             this._edsmEngine = new EDSMEngine(filter);
+            _edsmEngine.Throttle = 1000;
+            _edsmEngine.MaxPerBatch = 40;
 
             // EDSM config
             var customConfig = new CustomConfig(_storage, "edsm");
@@ -354,7 +353,6 @@ namespace EDSMSimpleSync
             _edsmEngine.ServiceJournal = new SerivceJournal(api);
             // _edsmEngine.ServiceJournal = new VoidServiceJournal();
             _edsmEngine.ServiceSystem = new CacheServiceSystem(new ServiceSystem(), new MemoryStorage());
-            _edsmEngine.Configure();
 
             return this._edsmEngine;
         }
@@ -381,6 +379,8 @@ namespace EDSMSimpleSync
 
             var inara = new SyncPlugin(filter, "Inara");
             inara.ServiceJournal = service;
+            inara.Throttle = 0;
+            inara.MaxPerBatch = 200;
 
             return inara;
         }

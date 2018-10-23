@@ -19,10 +19,28 @@ namespace EDSync.EDSM
 
         public ApiEDSM Api { get; private set; }
 
-        public IList<string> GetDiscardedEvents()
+        public IList<string> DiscardedEvents { get; private set; }
+
+        public JournalResponse TestConnection()
         {
-            return Api.GetDiscardedEvents();
+            var result = this.PostJournalEntry("TEST");
+
+            // it's ok
+            if (result.MessageNumber == 302) result.MessageNumber = 100;
+
+            return result;
         }
+
+        public bool IsEventDiscarded(string name)
+        {
+            if (DiscardedEvents == null)
+            {
+                DiscardedEvents = Api.GetDiscardedEvents();
+            }
+
+            return DiscardedEvents.Contains(name);
+        }
+
 
         public IEnumerable<string> Commit()
         {

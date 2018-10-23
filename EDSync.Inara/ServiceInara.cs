@@ -19,10 +19,33 @@ namespace EDSync.Inara
 
         public InaraStatus Status { get; private set; }
 
-        public IList<string> GetDiscardedEvents()
+        public IList<string> ManagedEvents { get; private set; }
+
+        public bool IsEventDiscarded(string name)
         {
-            return new List<string>();
+            if (ManagedEvents == null)
+            {
+                ManagedEvents = new List<string> { "LoadGame","Rank","Progress", "LoadGame", "FSDJump" };
+            }
+
+            return !ManagedEvents.Contains(name);
         }
+
+        public JournalResponse TestConnection()
+        {
+            var response = this.Api.GetCommanderProfile("Baalmeyer");
+
+            var j = new JournalResponse();
+
+            if (response?.Events?.Count > 0)
+            {
+                j.MessageNumber = (response.Events[0].Code == 200) ? 100 : 0;
+
+            }
+
+            return j;
+        }
+
 
         public JournalResponse PostJournalEntry(string data)
         {
@@ -192,9 +215,9 @@ namespace EDSync.Inara
         private string manageReputation(string line)
         {
             dynamic json = JsonConvert.DeserializeObject(line);
-            this.Status.ReputationEmpire = json.Empire;
+            if (json.Empire != null)  this.Status.ReputationEmpire = json.Empire;
             if (json.Alliance != null) this.Status.ReputationAlliance = json.Alliance;
-            this.Status.ReputationFederation = json.Federation;
+            if (json.Federation != null) this.Status.ReputationFederation = json.Federation;
 
             return "Reputation updated";
         }

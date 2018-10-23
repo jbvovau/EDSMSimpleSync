@@ -34,6 +34,11 @@ namespace EDUploader
         }
 
         /// <summary>
+        /// Enabled by default
+        /// </summary>
+        public bool Enabled => true;
+
+        /// <summary>
         /// The directory listener
         /// </summary>
         public IDirectoryListener DirectoryListener { get; private set; }
@@ -73,6 +78,13 @@ namespace EDUploader
             }
         }
 
+        public void Add(SyncPlugin plugin)
+        {
+            this.Add(plugin as IEntryManager);
+
+            plugin.PluginEventHandler += this.pluginMessage;
+        }
+
         public void Add(IEntryManager manager)
         {
             this.EntryManagers.Add(manager);
@@ -80,7 +92,9 @@ namespace EDUploader
 
         public void Listen()
         {
+            
             this.build();
+            this.testConnections();
 
             this.DirectoryListener.Listen();
             this.DirectoryListener.ReadAll();
@@ -127,7 +141,7 @@ namespace EDUploader
             return true;
         }
 
-        private void Send(int count)
+        private void Send()
         {
             bool somethingHappened = false;
 
@@ -136,6 +150,9 @@ namespace EDUploader
                 var syncPlugin = em as SyncPlugin;
                 if (syncPlugin != null)
                 {
+                    // check if enabled
+                    if (!syncPlugin.Enabled) continue;
+
                     // check last activity
                     var span = DateTime.Now.Subtract(syncPlugin.LastActivity);
                     if (span < TimeSpan.FromSeconds(5))
@@ -144,11 +161,10 @@ namespace EDUploader
                         continue;
                     }
 
-                    var list = syncPlugin.Next(count);
+                    var list = syncPlugin.Next(syncPlugin.MaxPerBatch);
 
                     if (list.Count > 0)
                     {
-
                         somethingHappened = true;
                         _countNewEntry = 0;
 
@@ -169,6 +185,10 @@ namespace EDUploader
 
                             syncPlugin.Remove(list);
                             customMessage(syncPlugin.Name, "SYNC", "Data sent : " + list.Count);
+                            if (syncPlugin.Throttle > 0)
+                            {
+                                Thread.Sleep(syncPlugin.Throttle);
+                            }
                         }
                     }
                     else
@@ -190,6 +210,19 @@ namespace EDUploader
 
         }
 
+        private void testConnections()
+        {
+            foreach(var plugin in this.EntryManagers)
+            {
+                var obj = plugin as SyncPlugin;
+                if (obj != null)
+                {
+                    var result = obj.TestConnection();
+                    obj.Enabled = result;
+                }
+            }
+        }
+
         private void build()
         {
             // add this as EntryManager to parser
@@ -201,6 +234,11 @@ namespace EDUploader
                     entryParser.Add(this);
                 }
             }
+        }
+
+        private void pluginMessage(SyncPlugin plugin, string type, string message)
+        {
+            this.customMessage(plugin.Name, type, message);
         }
 
         private void customMessage(string source, string type, string message)
@@ -227,8 +265,7 @@ namespace EDUploader
             while (this._sending)
             {
                 if (!this._paused) { 
-                    this.Send(40);
-                    Thread.Sleep(500);
+                    this.Send();
                 } else
                 {
                     Thread.Sleep(10000);

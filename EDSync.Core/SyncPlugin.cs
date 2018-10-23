@@ -29,12 +29,27 @@ namespace EDSync.Core
             this._lines = new List<string>();
             this._sending = false;
             this.LastActivity = DateTime.Now;
+            this.Enabled = true;
+            this.Throttle = 1000;
+            this.MaxPerBatch = 40;
         }
 
         /// <summary>
         /// Plugin name
         /// </summary>
         public string Name { get; private set; }
+
+        public bool Enabled
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Pause between sent
+        /// </summary>
+        public int Throttle { get; set; }
+
+        public int MaxPerBatch { get; set; }
 
         public IEntryFilter EntryFilter { get; private set; }
 
@@ -45,6 +60,21 @@ namespace EDSync.Core
         /// </summary>
         public DateTime LastActivity { get; private set; }
 
+        public bool TestConnection()
+        {
+            var result = this.ServiceJournal.TestConnection();
+
+            var ok = (result?.MessageNumber == 100);
+
+            if (!ok)
+            {
+                PluginLog("ERROR", result?.MessageNumber + " - " + result?.Message);
+                Enabled = false;
+            }
+
+            return ok;
+        }
+
         /// <summary>
         /// List new journal entry
         /// </summary>
@@ -53,6 +83,10 @@ namespace EDSync.Core
         public virtual bool AddEntry(string data)
         {
             this.LastActivity = DateTime.Now;
+
+            // check if discarded
+            string name = Utils.GetName(data);
+            if (this.ServiceJournal.IsEventDiscarded(name)) return false;
 
             if (EntryFilter.Accepted(data))
             {
@@ -63,7 +97,7 @@ namespace EDSync.Core
                 }
                 EntryFilter.Discard(data);
                 this._sending = true;
-                PluginLog("DEBUG", "New Event " + data);
+                // PluginLog("DEBUG", "New Event " + data);
                 return true;
             }
 

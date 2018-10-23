@@ -213,6 +213,8 @@ namespace EDSMDomain.Tests
                 this.Count = 0;
             }
 
+            public bool Enabled => true;
+
             public IEntryFilter EntryFilter { get; set; }
 
             public int Count { get; private set; }

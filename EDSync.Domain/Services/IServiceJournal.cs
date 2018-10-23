@@ -9,7 +9,9 @@ namespace EDSMDomain.Services
 {
     public interface IServiceJournal
     {
-        IList<string> GetDiscardedEvents();
+        bool IsEventDiscarded(string name);
+
+        JournalResponse TestConnection();
 
         JournalResponse PostJournalEntry(string data);
 

@@ -36,8 +36,6 @@ namespace EDSync.EDSM
 
         public IServiceSystem ServiceSystem { get; set; }
 
-        public IList<string> DiscaredEvents { get; private set; }
-
         public GameStatus Status
         {
             get
@@ -48,16 +46,6 @@ namespace EDSync.EDSM
 
         #endregion
 
-
-
-        public void Configure()
-        {
-            // load discarded Details
-            DiscaredEvents = ServiceJournal.GetDiscardedEvents();
-
-            logger.Debug("Discarded Events loaded. Count : " + DiscaredEvents.Count);
-
-        }
 
         /// <summary>
         /// New entry 
@@ -71,7 +59,7 @@ namespace EDSync.EDSM
             {
                 // this.Api.PostJournalLine(line);
                 var name = Utils.GetName(line);
-                if (this.IsDiscardedEvent(name))
+                if (this.ServiceJournal.IsEventDiscarded(name))
                 {
                     return false;
                 }
@@ -218,17 +206,6 @@ namespace EDSync.EDSM
 
             return newdata;
         }
-
-        private bool IsDiscardedEvent(string name)
-        {
-            if (name == null)
-            {
-                return true;
-            }
-
-            return (DiscaredEvents.Contains(name));
-        }
-
 
     }
 

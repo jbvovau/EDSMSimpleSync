@@ -46,9 +46,16 @@
             this.tabControlApp = new System.Windows.Forms.TabControl();
             this.tabSynchro = new System.Windows.Forms.TabPage();
             this.tabCurrentSystem = new System.Windows.Forms.TabPage();
-            this.labelCurrentSystem = new System.Windows.Forms.Label();
-            this.tbCurrentSystem = new System.Windows.Forms.TextBox();
             this.tbCurrentStation = new System.Windows.Forms.TextBox();
+            this.tbCurrentSystem = new System.Windows.Forms.TextBox();
+            this.labelCurrentSystem = new System.Windows.Forms.Label();
+            this.tpSettings = new System.Windows.Forms.TabPage();
+            this.gbSettingsInara = new System.Windows.Forms.GroupBox();
+            this.tbInaraCmdr = new System.Windows.Forms.TextBox();
+            this.tbInaraApiKey = new System.Windows.Forms.TextBox();
+            this.gbSettingsEDSM = new System.Windows.Forms.GroupBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.panelSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerSync)).BeginInit();
@@ -58,6 +65,9 @@
             this.tabControlApp.SuspendLayout();
             this.tabSynchro.SuspendLayout();
             this.tabCurrentSystem.SuspendLayout();
+            this.tpSettings.SuspendLayout();
+            this.gbSettingsInara.SuspendLayout();
+            this.gbSettingsEDSM.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtbLogs
@@ -207,6 +217,7 @@
             // 
             this.tabControlApp.Controls.Add(this.tabSynchro);
             this.tabControlApp.Controls.Add(this.tabCurrentSystem);
+            this.tabControlApp.Controls.Add(this.tpSettings);
             this.tabControlApp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlApp.Location = new System.Drawing.Point(0, 0);
             this.tabControlApp.Name = "tabControlApp";
@@ -239,14 +250,13 @@
             this.tabCurrentSystem.Text = "System";
             this.tabCurrentSystem.UseVisualStyleBackColor = true;
             // 
-            // labelCurrentSystem
+            // tbCurrentStation
             // 
-            this.labelCurrentSystem.AutoSize = true;
-            this.labelCurrentSystem.Location = new System.Drawing.Point(24, 26);
-            this.labelCurrentSystem.Name = "labelCurrentSystem";
-            this.labelCurrentSystem.Size = new System.Drawing.Size(78, 13);
-            this.labelCurrentSystem.TabIndex = 0;
-            this.labelCurrentSystem.Text = "Current System";
+            this.tbCurrentStation.Location = new System.Drawing.Point(109, 45);
+            this.tbCurrentStation.Name = "tbCurrentStation";
+            this.tbCurrentStation.ReadOnly = true;
+            this.tbCurrentStation.Size = new System.Drawing.Size(260, 20);
+            this.tbCurrentStation.TabIndex = 2;
             // 
             // tbCurrentSystem
             // 
@@ -256,13 +266,81 @@
             this.tbCurrentSystem.Size = new System.Drawing.Size(260, 20);
             this.tbCurrentSystem.TabIndex = 1;
             // 
-            // tbCurrentStation
+            // labelCurrentSystem
             // 
-            this.tbCurrentStation.Location = new System.Drawing.Point(109, 45);
-            this.tbCurrentStation.Name = "tbCurrentStation";
-            this.tbCurrentStation.ReadOnly = true;
-            this.tbCurrentStation.Size = new System.Drawing.Size(260, 20);
-            this.tbCurrentStation.TabIndex = 2;
+            this.labelCurrentSystem.AutoSize = true;
+            this.labelCurrentSystem.Location = new System.Drawing.Point(24, 26);
+            this.labelCurrentSystem.Name = "labelCurrentSystem";
+            this.labelCurrentSystem.Size = new System.Drawing.Size(78, 13);
+            this.labelCurrentSystem.TabIndex = 0;
+            this.labelCurrentSystem.Text = "Current System";
+            // 
+            // tpSettings
+            // 
+            this.tpSettings.Controls.Add(this.gbSettingsEDSM);
+            this.tpSettings.Controls.Add(this.gbSettingsInara);
+            this.tpSettings.Location = new System.Drawing.Point(4, 22);
+            this.tpSettings.Name = "tpSettings";
+            this.tpSettings.Size = new System.Drawing.Size(748, 607);
+            this.tpSettings.TabIndex = 2;
+            this.tpSettings.Text = "Settings";
+            this.tpSettings.UseVisualStyleBackColor = true;
+            // 
+            // gbSettingsInara
+            // 
+            this.gbSettingsInara.Controls.Add(this.tbInaraApiKey);
+            this.gbSettingsInara.Controls.Add(this.tbInaraCmdr);
+            this.gbSettingsInara.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbSettingsInara.Location = new System.Drawing.Point(8, 134);
+            this.gbSettingsInara.Name = "gbSettingsInara";
+            this.gbSettingsInara.Size = new System.Drawing.Size(539, 100);
+            this.gbSettingsInara.TabIndex = 1;
+            this.gbSettingsInara.TabStop = false;
+            this.gbSettingsInara.Text = "Inara";
+            // 
+            // tbInaraCmdr
+            // 
+            this.tbInaraCmdr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbInaraCmdr.Location = new System.Drawing.Point(98, 19);
+            this.tbInaraCmdr.Name = "tbInaraCmdr";
+            this.tbInaraCmdr.Size = new System.Drawing.Size(420, 22);
+            this.tbInaraCmdr.TabIndex = 0;
+            // 
+            // tbInaraApiKey
+            // 
+            this.tbInaraApiKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbInaraApiKey.Location = new System.Drawing.Point(98, 56);
+            this.tbInaraApiKey.Name = "tbInaraApiKey";
+            this.tbInaraApiKey.Size = new System.Drawing.Size(420, 22);
+            this.tbInaraApiKey.TabIndex = 1;
+            // 
+            // gbSettingsEDSM
+            // 
+            this.gbSettingsEDSM.Controls.Add(this.textBox1);
+            this.gbSettingsEDSM.Controls.Add(this.textBox2);
+            this.gbSettingsEDSM.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbSettingsEDSM.Location = new System.Drawing.Point(8, 16);
+            this.gbSettingsEDSM.Name = "gbSettingsEDSM";
+            this.gbSettingsEDSM.Size = new System.Drawing.Size(539, 100);
+            this.gbSettingsEDSM.TabIndex = 2;
+            this.gbSettingsEDSM.TabStop = false;
+            this.gbSettingsEDSM.Text = "EDSM";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(98, 56);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(420, 22);
+            this.textBox1.TabIndex = 1;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.Location = new System.Drawing.Point(98, 19);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(420, 22);
+            this.textBox2.TabIndex = 0;
             // 
             // FormMain
             // 
@@ -284,6 +362,11 @@
             this.tabSynchro.ResumeLayout(false);
             this.tabCurrentSystem.ResumeLayout(false);
             this.tabCurrentSystem.PerformLayout();
+            this.tpSettings.ResumeLayout(false);
+            this.gbSettingsInara.ResumeLayout(false);
+            this.gbSettingsInara.PerformLayout();
+            this.gbSettingsEDSM.ResumeLayout(false);
+            this.gbSettingsEDSM.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -310,6 +393,13 @@
         private System.Windows.Forms.Label labelCurrentSystem;
         private System.Windows.Forms.TextBox tbCurrentSystem;
         private System.Windows.Forms.TextBox tbCurrentStation;
+        private System.Windows.Forms.TabPage tpSettings;
+        private System.Windows.Forms.GroupBox gbSettingsInara;
+        private System.Windows.Forms.TextBox tbInaraApiKey;
+        private System.Windows.Forms.TextBox tbInaraCmdr;
+        private System.Windows.Forms.GroupBox gbSettingsEDSM;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 
