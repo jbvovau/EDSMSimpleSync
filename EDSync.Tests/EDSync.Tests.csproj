@@ -56,19 +56,19 @@
     <Compile Include="UploaderTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EDLogWatcher\EDSync.Core.csproj">
+    <ProjectReference Include="..\EDSync.Core\EDSync.Core.csproj">
       <Project>{14ebfb33-0cca-496d-a26c-c684f2f93dc4}</Project>
       <Name>EDSync.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EDSMDomain\EDSync.Domain.csproj">
+    <ProjectReference Include="..\EDSync.Domain\EDSync.Domain.csproj">
       <Project>{68ab7525-ca08-4266-b735-3be617c2da19}</Project>
       <Name>EDSync.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EDSMSimpleSync\EDSync.GUI.csproj">
+    <ProjectReference Include="..\EDSync.GUI\EDSync.GUI.csproj">
       <Project>{739888ee-ea2d-4031-a32c-cbb1b3978e95}</Project>
       <Name>EDSync.GUI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EDSMSynchro\EDSync.EDSM.csproj">
+    <ProjectReference Include="..\EDSync.EDSM\EDSync.EDSM.csproj">
       <Project>{9eb0e63c-b6e9-4d73-99b9-223d4a200e15}</Project>
       <Name>EDSync.EDSM</Name>
     </ProjectReference>

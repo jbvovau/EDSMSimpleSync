@@ -68,7 +68,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EDSMDomain\EDSync.Domain.csproj">
+    <ProjectReference Include="..\EDSync.Domain\EDSync.Domain.csproj">
       <Project>{68ab7525-ca08-4266-b735-3be617c2da19}</Project>
       <Name>EDSync.Domain</Name>
     </ProjectReference>

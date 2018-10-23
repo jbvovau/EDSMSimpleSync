@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.Core", "EDLogWatcher\EDSync.Core.csproj", "{14EBFB33-0CCA-496D-A26C-C684F2F93DC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.Core", "EDSync.Core\EDSync.Core.csproj", "{14EBFB33-0CCA-496D-A26C-C684F2F93DC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.EDSM", "EDSMSynchro\EDSync.EDSM.csproj", "{9EB0E63C-B6E9-4D73-99B9-223D4A200E15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.EDSM", "EDSync.EDSM\EDSync.EDSM.csproj", "{9EB0E63C-B6E9-4D73-99B9-223D4A200E15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.GUI", "EDSMSimpleSync\EDSync.GUI.csproj", "{739888EE-EA2D-4031-A32C-CBB1B3978E95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.GUI", "EDSync.GUI\EDSync.GUI.csproj", "{739888EE-EA2D-4031-A32C-CBB1B3978E95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.Domain", "EDSMDomain\EDSync.Domain.csproj", "{68AB7525-CA08-4266-B735-3BE617C2DA19}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.Domain", "EDSync.Domain\EDSync.Domain.csproj", "{68AB7525-CA08-4266-B735-3BE617C2DA19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.Tests", "EDSMDomain.Tests\EDSync.Tests.csproj", "{F61046CB-E28D-461D-944E-13A2F485797D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.Tests", "EDSync.Tests\EDSync.Tests.csproj", "{F61046CB-E28D-461D-944E-13A2F485797D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.Inara", "SyncInara\EDSync.Inara.csproj", "{99881E0C-3238-4736-935C-9D2EBCA09218}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDSync.Inara", "EDSync.Inara\EDSync.Inara.csproj", "{99881E0C-3238-4736-935C-9D2EBCA09218}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

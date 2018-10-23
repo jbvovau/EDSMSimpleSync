@@ -51,11 +51,11 @@
     <Compile Include="ServiceInara.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EDLogWatcher\EDSync.Core.csproj">
+    <ProjectReference Include="..\EDSync.Core\EDSync.Core.csproj">
       <Project>{14ebfb33-0cca-496d-a26c-c684f2f93dc4}</Project>
       <Name>EDSync.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EDSMDomain\EDSync.Domain.csproj">
+    <ProjectReference Include="..\EDSync.Domain\EDSync.Domain.csproj">
       <Project>{68AB7525-CA08-4266-B735-3BE617C2DA19}</Project>
       <Name>EDSync.Domain</Name>
     </ProjectReference>

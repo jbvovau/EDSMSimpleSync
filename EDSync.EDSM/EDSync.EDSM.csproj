@@ -59,11 +59,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EDLogWatcher\EDSync.Core.csproj">
+    <ProjectReference Include="..\EDSync.Core\EDSync.Core.csproj">
       <Project>{14ebfb33-0cca-496d-a26c-c684f2f93dc4}</Project>
       <Name>EDSync.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EDSMDomain\EDSync.Domain.csproj">
+    <ProjectReference Include="..\EDSync.Domain\EDSync.Domain.csproj">
       <Project>{68ab7525-ca08-4266-b735-3be617c2da19}</Project>
       <Name>EDSync.Domain</Name>
     </ProjectReference>
