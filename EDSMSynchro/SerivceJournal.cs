@@ -24,6 +24,11 @@ namespace EDSync.EDSM
             return Api.GetDiscardedEvents();
         }
 
+        public IEnumerable<string> Commit()
+        {
+            yield return "Everything is ok";
+        }
+
         public JournalResponse PostJournalEntry(IList<string> lines)
         {
             if (lines == null || lines.Count == 0) return new JournalResponse { Message = "Nothing to send", MessageNumber = 100 };

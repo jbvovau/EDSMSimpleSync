@@ -8,16 +8,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EDSync.Core.Parser
+namespace EDSync.Core
 {
+    /// <summary>
+    /// PLugin that accept Journal Log as data
+    /// </summary>
     public class SyncPlugin : IEntryManager
     {
-
         // sync Details
         public delegate void PluginEvent(SyncPlugin source, string type, string message);
         public event PluginEvent PluginEventHandler;
 
-        private IList<string> _lines;
+        private readonly IList<string> _lines;
         private bool _sending;
 
         public SyncPlugin(IEntryFilter filter, string name)
@@ -29,6 +31,9 @@ namespace EDSync.Core.Parser
             this.LastActivity = DateTime.Now;
         }
 
+        /// <summary>
+        /// Plugin name
+        /// </summary>
         public string Name { get; private set; }
 
         public IEntryFilter EntryFilter { get; private set; }
@@ -40,6 +45,11 @@ namespace EDSync.Core.Parser
         /// </summary>
         public DateTime LastActivity { get; private set; }
 
+        /// <summary>
+        /// List new journal entry
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public virtual bool AddEntry(string data)
         {
             this.LastActivity = DateTime.Now;
@@ -102,6 +112,7 @@ namespace EDSync.Core.Parser
             }
         }
 
+
         public void PluginLog(string type, string message)
         {
             PluginLog(null, type, message);
@@ -118,13 +129,7 @@ namespace EDSync.Core.Parser
             }
             sb.Append(message);
 
-            if (PluginEventHandler != null)
-            {
-                PluginEventHandler(this, type, sb.ToString());
-            }
-
+            PluginEventHandler?.Invoke(this, type, sb.ToString());
         }
-
-
     }
 }

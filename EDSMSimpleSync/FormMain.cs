@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,9 +22,9 @@ using EDSync.Core;
 using EDSync.EDSM;
 using EDSync.Services;
 using EDSync.Core.Storage;
-using SyncInara;
-using EDSync.Core.Parser;
 using EDSMDomain.Api;
+using EDSync.Inara;
+using EDSync.Inara.Api;
 
 namespace EDSMSimpleSync
 {
@@ -59,6 +60,10 @@ namespace EDSMSimpleSync
 
         private void fillConfig()
         {
+            // version
+            this._appVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+
             // define storage
             this._storage = new FileStorage(CONFIG_FILE);
             EDConfig.Instance.Storage = this._storage;
@@ -97,7 +102,7 @@ namespace EDSMSimpleSync
             engine.Add(this.BuildEDSMJournal());
 
             // listen Inara
-            // engine.Add(this.BuildInaraEngine());
+            engine.Add(this.BuildInaraEngine());
 
             return engine;
         }
@@ -169,12 +174,6 @@ namespace EDSMSimpleSync
             }
 
             this.setStart(true);
-
-            // list to new sync Details for displaying
-            // this._edsmEngine.NewSyncEvent += _edsmEngine_NewSyncEvent;
-
-            // load last date
-            // _edsmEngine.LoadLastDate();
 
             // listen journa log directory
             _syncEngine.Listen();
@@ -342,7 +341,7 @@ namespace EDSMSimpleSync
 
         #endregion
 
-        #region configure EDSM
+        #region configure plugins
 
         private EDSMEngine BuildEDSMJournal()
         {
@@ -359,7 +358,7 @@ namespace EDSMSimpleSync
             api.ApiKey = customConfig.ApiKey;
             api.CommanderName = customConfig.CommanderName;
             api.FromSoftwareVersion = _appVersion;
-            api.FromSoftware = "EliteSimpleSync";
+            api.FromSoftware = "EDSimpleSync";
 
             _edsmEngine.ServiceJournal = new SerivceJournal(api);
             // _edsmEngine.ServiceJournal = new VoidServiceJournal();
@@ -381,13 +380,13 @@ namespace EDSMSimpleSync
             api.ApiKey = customConfig.ApiKey;
             api.CommanderName = customConfig.CommanderName;
             api.FromSoftwareVersion = _appVersion;
-            api.FromSoftware = "EliteSimpleSync";
+            api.FromSoftware = "EDSimpleSync";
 
             // define inara service
             IServiceJournal service = new ServiceInara(api);
 
             // debug
-            service = new VoidServiceJournal();
+            // service = new VoidServiceJournal();
 
             var inara = new SyncPlugin(filter, "Inara");
             inara.ServiceJournal = service;

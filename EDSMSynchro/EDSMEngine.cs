@@ -12,7 +12,6 @@ using EDLogWatcher.Parser;
 using EDLogWatcher.Watcher;
 using EDSync.Core;
 using EDSync.Core.Filter;
-using EDSync.Core.Parser;
 
 namespace EDSync.EDSM
 {

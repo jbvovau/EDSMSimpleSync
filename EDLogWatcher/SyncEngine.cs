@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using EDLogWatcher.Watcher;
 using EDSync.Core.Filter;
-using EDSync.Core.Parser;
 using System.Threading;
 using EDSync.Core;
 
@@ -98,6 +97,11 @@ namespace EDUploader
             customMessage("SYNC", "INFO", "Synchro Stopped");
         }
 
+        /// <summary>
+        /// Add a new entry, feed by Entry Parsers
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public bool AddEntry(string data)
         {
             this._paused = false;
@@ -129,39 +133,51 @@ namespace EDUploader
 
             foreach(var em in this.EntryManagers)
             {
-                var set = em as SyncPlugin;
-                if (set != null)
+                var syncPlugin = em as SyncPlugin;
+                if (syncPlugin != null)
                 {
                     // check last activity
-                    var span = DateTime.Now.Subtract(set.LastActivity);
+                    var span = DateTime.Now.Subtract(syncPlugin.LastActivity);
                     if (span < TimeSpan.FromSeconds(5))
                     {
                         somethingHappened = true;
                         continue;
                     }
 
-                    var list = set.Next(count);
+                    var list = syncPlugin.Next(count);
 
-                    if (list.Count == 0) continue;
-
-                    somethingHappened = true;
-                    _countNewEntry = 0;
-
-                    customMessage(set.Name, "SYNC", "Start sending data : " + list.Count);
-                    var response = set.ServiceJournal.PostJournalEntry(list);
-                    if (response.MessageNumber == 100)
+                    if (list.Count > 0)
                     {
-                        // build reply
-                        for (int i = 0 ; i < list.Count; i++)
-                        {
-                            var evt = list[i];
-                            var name = Utils.GetName(evt);
-                            var timestamp = Utils.GetTimestamp(evt);
-                            customMessage(set.Name, "SYNC", string.Format("[{0}] {1} {2}", timestamp, name.PadRight(25), response.GetMessageAt(i)));
-                        }
 
-                        set.Remove(list);
-                        customMessage(set.Name, "SYNC", "Data sent : " + list.Count);
+                        somethingHappened = true;
+                        _countNewEntry = 0;
+
+                        customMessage(syncPlugin.Name, "SYNC", "Start sending data : " + list.Count);
+                        var response = syncPlugin.ServiceJournal.PostJournalEntry(list);
+                        if (response.MessageNumber == 100)
+                        {
+                            // build reply
+                            for (int i = 0; i < list.Count; i++)
+                            {
+                                var evt = list[i];
+                                var name = Utils.GetName(evt);
+                                var timestamp = Utils.GetTimestamp(evt);
+                                customMessage(syncPlugin.Name, "SYNC",
+                                    string.Format("[{0}] {1} {2}", timestamp, name.PadRight(25),
+                                        response.GetMessageAt(i)));
+                            }
+
+                            syncPlugin.Remove(list);
+                            customMessage(syncPlugin.Name, "SYNC", "Data sent : " + list.Count);
+                        }
+                    }
+                    else
+                    {
+                        // nothing : commit
+                        foreach (var detail in syncPlugin.ServiceJournal.Commit())
+                        {
+                            customMessage(syncPlugin.Name, "SYNC", detail);
+                        }
                     }
                 }
             }
@@ -212,7 +228,7 @@ namespace EDUploader
             {
                 if (!this._paused) { 
                     this.Send(40);
-                    Thread.Sleep(2000);
+                    Thread.Sleep(20);
                 } else
                 {
                     Thread.Sleep(10000);

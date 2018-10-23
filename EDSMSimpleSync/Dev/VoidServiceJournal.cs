@@ -34,5 +34,10 @@ namespace EDSMSimpleSync.Dev
             Console.WriteLine("VOID : " + data);
             return new JournalResponse { Message = "Sent to the VOID...", MessageNumber = 100 };
         }
+
+        public IEnumerable<string> Commit()
+        {
+            yield return "Everything is commited to the dark void...";
+        }
     }
 }

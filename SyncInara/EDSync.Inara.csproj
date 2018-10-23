@@ -7,8 +7,8 @@
     <ProjectGuid>{99881E0C-3238-4736-935C-9D2EBCA09218}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SyncInara</RootNamespace>
-    <AssemblyName>SyncInara</AssemblyName>
+    <RootNamespace>EDSync.Inara</RootNamespace>
+    <AssemblyName>EDSync.Inara</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiInara.cs" />
+    <Compile Include="Api\ApiInara.cs" />
+    <Compile Include="Api\Models.cs" />
+    <Compile Include="InaraStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceInara.cs" />
   </ItemGroup>

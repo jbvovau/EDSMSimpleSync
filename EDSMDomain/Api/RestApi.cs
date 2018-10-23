@@ -11,9 +11,14 @@ namespace EDSMDomain.Api
     {
 
         // see : https://docs.microsoft.com/en-us/azure/architecture/antipatterns/improper-instantiation/
-        public static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient client = new HttpClient();
 
         #region Properties
+
+        public HttpClient Client
+        {
+            get { return client; }
+        }
 
         public string CommanderName { get; set; }
 
@@ -35,7 +40,6 @@ namespace EDSMDomain.Api
         /// <param name="values"></param>
         public async Task<string> Post(string url, Dictionary<string, string> values)
         {
-
             var content = new FormUrlEncodedContent(values);
             var response = await client.PostAsync(url, content);
             var responseString = await response.Content.ReadAsStringAsync();
@@ -45,7 +49,6 @@ namespace EDSMDomain.Api
 
         public async Task<string> Post(string url, string data)
         {
-
             var content = new StringContent(data, Encoding.UTF8, "application/json");
             var response = await client.PostAsync(url, content);
             var responseString = await response.Content.ReadAsStringAsync();
@@ -55,7 +58,6 @@ namespace EDSMDomain.Api
 
         public async Task<string> Get(string url)
         {
-
             string response = null;
             response = await client.GetStringAsync(url);
             return response;

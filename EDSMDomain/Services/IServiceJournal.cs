@@ -14,5 +14,11 @@ namespace EDSMDomain.Services
         JournalResponse PostJournalEntry(string data);
 
         JournalResponse PostJournalEntry(IList<string> lines);
+
+        /// <summary>
+        /// Commmit result and returns messages
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<string> Commit();
     }
 }
