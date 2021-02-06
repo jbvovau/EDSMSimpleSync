@@ -100,16 +100,7 @@
             this.panelSettings.Name = "panelSettings";
             this.panelSettings.Size = new System.Drawing.Size(726, 104);
             this.panelSettings.TabIndex = 1;
-            // 
-            // pictureBoxLogo
-            // 
-            this.pictureBoxLogo.Image = global::EDSMSimpleSync.Properties.Resources.elite_dangerous_minimalistic;
-            this.pictureBoxLogo.Location = new System.Drawing.Point(3, 9);
-            this.pictureBoxLogo.Name = "pictureBoxLogo";
-            this.pictureBoxLogo.Size = new System.Drawing.Size(81, 75);
-            this.pictureBoxLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBoxLogo.TabIndex = 9;
-            this.pictureBoxLogo.TabStop = false;
+
             // 
             // label3
             // 
